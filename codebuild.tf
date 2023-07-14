@@ -37,7 +37,7 @@ module "sast" {
   codebuild_role = aws_iam_role.codebuild_validate.arn
   environment_variables = merge(tomap({
     SAST_REPORT_ARN = aws_codebuild_report_group.sast.arn
-    CHECKOV_SKIPS   = var.checkov_skip
+    CHECKOV_SKIPS   = local.checkov_skip
     }),
     var.environment_variables,
   )

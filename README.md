@@ -75,7 +75,7 @@ provider "aws" {
 }
 
 module "pipeline" {
-  source          = ""
+  source          = "github.com/aws-samples/aws-terraform-pipeline"
   pipeline_name   = "pipeline-name"
   codecommit_repo = "codecommit-repo-name"
   branch          = "main"
@@ -85,9 +85,9 @@ module "pipeline" {
     TFLINT_VERSION = "0.33.0"
   }
 
-  checkov_skip = join(",", [
+  checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
-  ])
+  ]
 }
 ```
 
@@ -112,7 +112,7 @@ The pipeline can assume a cross-account role and deploy to another AWS account. 
 
 ## Troubleshooting
 
-| Issue | Solution |
+| Issue | Fix |
 |---|---|
 | Failed lint, fmt, or SAST checks | Read the report or logs to discover why the code has failed, then make a new commit |
 | Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit |
