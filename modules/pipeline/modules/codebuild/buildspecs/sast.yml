@@ -1,0 +1,31 @@
+version: 0.2
+
+phases:
+
+  install:
+    runtime-versions:
+       python: latest
+    commands:
+      - cd /usr/bin
+      - yum install -y yum-utils
+      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - yum install -y terraform-${TF_VERSION}
+      - python -V
+      - pip3 install checkov
+
+  build:
+    commands:   
+      - cd "$CODEBUILD_SRC_DIR"
+      - checkov --directory ./ --skip-path ./deploy --skip-check ${CHECKOV_SKIPS} -o junitxml > checkov.xml
+
+  post_build:
+    commands:
+      - echo "sast complete"
+
+reports:
+  ${SAST_REPORT_ARN}:
+    files:
+      - checkov.xml
+    base-directory: ./
+    file-format: JUNITXML
+      

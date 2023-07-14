@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+
+  install:
+    commands:
+      - cd /usr/bin
+
+  build:
+    commands:   
+      - cd "$CODEBUILD_SRC_DIR"
+
+  post_build:
+    commands:
+      - echo "test complete"

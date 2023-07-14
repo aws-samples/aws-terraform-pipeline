@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+
+  install:
+    commands:
+      - cd /usr/bin
+      - yum install -y yum-utils
+      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - yum install -y terraform-${TF_VERSION}
+
+  build:
+    commands:
+      - cd "$CODEBUILD_SRC_DIR"
+      - terraform init -no-color
+      - terraform plan
+
+  post_build:
+    commands:
+      - echo "plan complete"
