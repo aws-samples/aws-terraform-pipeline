@@ -1,9 +1,9 @@
 # aws-terraform-pipeline
 
-This Terraform module will create a pipeline to deploy Terraform. It can deploy resources to the same AWS account, or another AWS account. 
+This Terraform module will create a pipeline to deploy Terraform. It can deploy resources to the same AWS account, or another AWS account using a cross-account role. 
 
 It could be used to:
-- validate code and resources 
+- validate code and resources before deployment
 - ensure resources are configured securely 
 - introduce a manual approval step to your deployment process
 
@@ -18,8 +18,7 @@ This module is designed to be deployed remotely, using the [GitHub source type](
 ## Limitations
 
 - This pipeline will only validate and deploy Terraform 
-- This pattern (currently) only works with an existing CodeCommit repository
-- This existing repo must have a remote backend 
+- This existing CodeCOmmit repository must have a remote backend 
 
 ## Architecture
 The module is sourced remotely using the [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github). But it could be cloned and sourced locally, if required. 
@@ -31,7 +30,7 @@ The module is sourced remotely using the [GitHub source type](https://developer.
 3. The pipeline validates the code, then runs a `terraform plan`, before waiting for manual approval. Once this is issued, the resources are built with a `terraform apply`, and then tested.  
 4. Pipeline artifacts are sent to an Amazon S3 bucket. Pipeline activity is logged in Amazon CloudWatch logs. 
 
-### Pipeline Validation
+#### Pipeline Validation
 
 | Check | Description |
 |---|---|
@@ -56,9 +55,9 @@ your repo
 
 This means terraform commands can be run against your existing repository, by the pipeline, without affecting the pipeline infrastructure. 
 
-### Module
+### Inputs
 
-Contents of the `main.tf` file in `deploy`.
+These are the module inputs for the `main.tf` file in the `deploy` directory.
 
 ```
 terraform {
@@ -103,14 +102,13 @@ module "pipeline" {
 1. Ensure your repository has a remote state configured that [this codebuild policy](./modules/pipeline/codebuild.tf?plain=1#198) can access. An S3 backend within the same AWS account is ideal for this.
 2. Commit changes to your repository. This will run the pipeline. 
 
-### (Optional) Edit the pipeline 
+## Optional Operations
+
+### Edit the pipeline 
 If you need to edit an existing pipeline, do so from the `deploy` directory with a `terraform apply`.
 
-### (Optional) Setup a cross-account pipeline
+### Setup a cross-account pipeline
 The pipeline can assume a cross-account role and deploy to another AWS account. Ensure there is a cross-account role that can be assumed by [this codebuild policy](./modules/pipeline/codebuild.tf?plain=1#198), then edit the terraform provider in your repository to include the `assume role` argument.
-
-### (Optional) Deploy this module locally
-This module could be deployed locally. Clone the repo and follow the above steps, setting up the module within your `deploy` directory. 
 
 ## Troubleshooting
 
@@ -132,9 +130,8 @@ The CodeBuild role is highly privileged as this pattern is intended for a wide a
 - [AWS CodePipeline User Guide](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
 - [Resource: aws_codecommit_repository](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codecommit_repository)
 - [Resource: aws_codepipeline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codepipeline)
+- [Resource: aws_codebuild_project](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codebuild_project)
 - [Federated multi-account access for AWS CodeCommit](https://aws.amazon.com/blogs/devops/federated-multi-account-access-for-aws-codecommit/)
-
-
 
 ## Security
 
