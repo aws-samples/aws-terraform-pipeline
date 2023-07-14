@@ -20,6 +20,7 @@ variable "environment_variables" {
 
 variable "checkov_skip" {
   description = "list of checkov checks to skip"
-  type        = string
+  type        = list(string)
+  default     = [ "" ]
 }
 

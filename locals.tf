@@ -3,5 +3,5 @@
 
 locals {
   log_group = "/aws/${var.pipeline_name}"
-  checkov_skip = join(",", "${var.checkov.skip}")
+  checkov_skip = join(",", "${var.checkov_skip}")
 }
