@@ -188,7 +188,7 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 resource "aws_iam_policy" "codebuild_execution" {
-  name = "${var.pipeline_name}-codebuild-execution-policy"
+  name   = "${var.pipeline_name}-codebuild-execution-policy"
   policy = data.aws_iam_policy_document.codebuild_execution_policy.json
 }
 
