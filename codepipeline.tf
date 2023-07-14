@@ -107,7 +107,8 @@ resource "aws_codepipeline" "this" {
       version  = "1"
 
       configuration = {
-        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please ensure you review the build logs the plan stage first."
+        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please ensure that you review the build logs of the plan stage before approving."
+        ExternalEntityLink = "https://${var.region}.console.aws.amazon.com/codesuite/codebuild/${data.aws_caller_identity.current.account_id}/projects/${var.pipeline_name}-plan/"
       }
     }
   }
