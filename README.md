@@ -2,6 +2,7 @@
  
 An easy way to deploy Terraform ... with Terraform. 
 
+🐓 🥚 ?
 
 ## Prerequisites
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
