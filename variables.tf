@@ -22,5 +22,5 @@ variable "checkov_skip" {
   description = "list of checkov checks to skip"
   type        = list(string)
   default     = [ "" ]
-}
+}    
 

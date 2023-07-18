@@ -66,16 +66,6 @@ module "apply" {
   log_group             = local.log_group
 }
 
-module "test" {
-  source                = "./modules/codebuild"
-  codebuild_name        = "${var.pipeline_name}-test"
-  codebuild_role        = aws_iam_role.codebuild_execution.arn
-  environment_variables = var.environment_variables
-  build_timeout         = 10
-  build_spec            = "test.yml"
-  log_group             = local.log_group
-}
-
 resource "aws_iam_role" "codebuild_validate" {
   name               = "${var.pipeline_name}-codebuild-validate-role"
   assume_role_policy = data.aws_iam_policy_document.codebuild_validate_assume_role.json
@@ -124,8 +114,7 @@ data "aws_iam_policy_document" "codebuild_execution_assume_role" {
       variable = "aws:SourceArn"
       values = [
         "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-plan",
-        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-apply",
-        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-test"
+        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-apply"
       ]
     }
   }
