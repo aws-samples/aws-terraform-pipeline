@@ -1,4 +1,4 @@
-# Terraform Pipeline Module
+# AWS Terraform pipeline module
  
 <p align="center">
 An easy way to deploy Terraform ... with Terraform. 
