@@ -9,7 +9,8 @@ An easy way to deploy Terraform ... with Terraform.
 - Existing AWS CodeCommit repository
 
 ## Limitations
-- This pattern requires a [remote state](https://developer.hashicorp.com/terraform/language/state/remote)
+- A [remote state](https://developer.hashicorp.com/terraform/language/state/remote) is required
+- This pattern (currently) only works with CodeCommit
 
 ## Architecture
 The module is sourced remotely using the [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github). But it could be cloned and sourced locally or from your own private registry, if required. 
