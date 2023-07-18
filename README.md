@@ -1,8 +1,7 @@
 # AWS Terraform pipeline module
  
-<p align="center">
 An easy way to deploy Terraform ... with Terraform. 
-</p>
+
 
 ## Prerequisites
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
