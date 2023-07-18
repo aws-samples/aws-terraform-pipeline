@@ -13,7 +13,6 @@ An easy way to deploy Terraform ... with Terraform.
 - This pattern (currently) only works with CodeCommit
 
 ## Architecture
-The module is sourced remotely using the [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github). But it could be cloned and sourced locally or from your own private registry, if required. 
 
 ![image info](./img/architecture.png)
 
@@ -49,7 +48,7 @@ This means terraform commands can be run against your existing repository, by th
 
 ### Module Inputs
 
-These are the module inputs for the `main.tf` file in the `deploy` directory. It is setup for a [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github) but it could be cloned and deployed locally. 
+These are the module inputs for the `main.tf` file in the `deploy` directory. It is setup for a [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github) but it could be cloned and deployed locally, or from a private registry.  
 
 ```
 terraform {
