@@ -15,11 +15,7 @@ An easy way to deploy Terraform ... with Terraform.
 ## Architecture
 The module is sourced remotely using the [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github). But it could be cloned and sourced locally or from your own private registry, if required. 
 
-<p align="center">
-    <img width="1000" src="./img/architecture.png" alt="Architecture">
-</p>
-
-![image info]()
+![image info](./img/architecture.png)
 
 1. User commits to existing repository. 
 2. The commit invokes an Amazon EventBridge rule, which runs the AWS CodePipeline pipeline.
