@@ -7,7 +7,7 @@ An easy way to deploy Terraform ... with Terraform.
 ## Prerequisites
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-- Existing AWS CodeCommit repository
+- An existing AWS CodeCommit repository
 
 ## Limitations
 - A [remote state](https://developer.hashicorp.com/terraform/language/state/remote) is required
