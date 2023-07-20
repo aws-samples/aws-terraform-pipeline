@@ -106,7 +106,7 @@ The pipeline can assume a cross-account role and deploy to another AWS account. 
 |---|---|
 | Failed lint, fmt, or SAST checks | Read the report or logs to discover why the code has failed, then make a new commit. |
 | Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit. |
-| Failed SAST | Read the checkov logs (Details > Reports) and either make the correction in code or add a skip to the module inputs. |
+| Failed SAST | Read the Checkov logs (Details > Reports) and either make the correction in code or add a skip to the module inputs. |
 | `Error: error creating CodeBuild Report Group: InvalidInputException: Invalid encryption key: region does not match current region` during `terraform apply` | Ensure you have defined the correct `region` in `main.tf`.  
 | `Terraform initialized in an empty directory!` | Make sure you are in the `deploy` directory when running `terraform init`. |
 | Pipeline fails on apply with `the action failed because no branch named main was found ...` | Either nothing has been committed to the repo or the branch is incorrect (Eg using `Master` not `Main`). Either commit to the Main branch or change the module input to fix this. |
@@ -120,7 +120,7 @@ Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline 
 - [Using identity-based policies for AWS CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/auth-and-access-control-iam-identity-based-access-control.html). 
 - [Limit pushes and merges to branches in AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-conditional-branch.html)
 
-Checkov skips can be used where checkov policies conflict with your organization's practices or design decisions. The `checkov_skip` module input allows you to set skips for all resources in your repository. For example, if you organization operates in a single region you may want to add `CKV_AWS_144` (Ensure that S3 bucket has cross-region replication enabled). For individual resource skips, you can still use [inline code comments](https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html).
+Checkov skips can be used where Checkov policies conflict with your organization's practices or design decisions. The `checkov_skip` module input allows you to set skips for all resources in your repository. For example, if your organization operates in a single region you may want to add `CKV_AWS_144` (Ensure that S3 bucket has cross-region replication enabled). For individual resource skips, you can still use [inline code comments](https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html).
 
 ## Related Resources
 
