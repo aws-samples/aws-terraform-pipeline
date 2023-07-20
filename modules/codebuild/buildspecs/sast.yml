@@ -16,11 +16,16 @@ phases:
   build:
     commands:   
       - cd "$CODEBUILD_SRC_DIR"
-      - checkov --directory ./ --skip-path ./deploy --skip-check ${CHECKOV_SKIPS} -o junitxml > checkov.xml
+      - |
+        if [ -z "${CHECKOV_SKIPS}" ]; then 
+          checkov --directory ./ --skip-path ./deploy -o junitxml > checkov.xml
+        else
+          checkov --directory ./ --skip-path ./deploy --skip-check ${CHECKOV_SKIPS} -o junitxml > checkov.xml
+        fi
 
   post_build:
     commands:
-      - echo "sast complete"
+      - echo "checkov complete, see report for details"
 
 reports:
   ${SAST_REPORT_ARN}:
