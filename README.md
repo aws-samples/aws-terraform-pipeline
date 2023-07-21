@@ -120,7 +120,27 @@ Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline 
 - [Using identity-based policies for AWS CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/auth-and-access-control-iam-identity-based-access-control.html). 
 - [Limit pushes and merges to branches in AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-conditional-branch.html)
 
+## Checkov
+
 Checkov skips can be used where Checkov policies conflict with your organization's practices or design decisions. The `checkov_skip` module input allows you to set skips for all resources in your repository. For example, if your organization operates in a single region you may want to add `CKV_AWS_144` (Ensure that S3 bucket has cross-region replication enabled). For individual resource skips, you can still use [inline code comments](https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html).
+
+Here are some skips that you could use with Amazon S3 depending on your organization's design decisions. 
+| ID | Finding |
+|---|---|
+| CKV_AWS_18 | Ensure the S3 bucket has access logging enabled |
+| CKV_AWS_21 | Ensure all data stored in the S3 bucket have versioning enabled |
+| CKV_AWS_144 | Ensure that S3 bucket has cross-region replication enabled |
+| CKV_AWS_145 | Ensure that S3 buckets are encrypted with KMS by default |
+| CKV_AWS_300 | Ensure S3 lifecycle configuration sets period for aborting failed uploads |
+| CKV2_AWS_61 | Ensure that an S3 bucket has a lifecycle configuration |
+| CKV2_AWS_62 | Ensure S3 buckets should have event notifications enabled |
+
+And here are some you may want to consider if you are using AWS managed KMS keys: 
+| ID | Finding |
+|---|---|
+| CKV_AWS_35 | Ensure CloudTrail logs are encrypted at rest using KMS CMKs |
+| CKV_AWS_119 | Ensure DynamoDB Tables are encrypted using a KMS Customer Managed CMK |
+| CKV_AWS_189 | Ensure EBS Volume is encrypted by KMS using a customer managed Key (CMK) |
 
 ## Related Resources
 
