@@ -124,7 +124,7 @@ Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline 
 
 Checkov skips can be used where Checkov policies conflict with your organization's practices or design decisions. The `checkov_skip` module input allows you to set skips for all resources in your repository. For example, if your organization operates in a single region you may want to add `CKV_AWS_144` (Ensure that S3 bucket has cross-region replication enabled). For individual resource skips, you can still use [inline code comments](https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html).
 
-Here are some skips that you could use with Amazon S3 depending on your organization's design decisions. 
+Here are some Amazon S3 skips that may align with your organization's policies or design decisions: 
 | ID | Finding |
 |---|---|
 | CKV_AWS_18 | Ensure the S3 bucket has access logging enabled |
