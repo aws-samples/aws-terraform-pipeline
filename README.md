@@ -1,6 +1,6 @@
 # AWS Terraform pipeline module
  
-An easy way to deploy Terraform ... with Terraform. 
+An efficient way to deploy Terraform ... with Terraform. 
 
 🐓 🥚 ?
 
