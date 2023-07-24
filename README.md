@@ -27,8 +27,8 @@ An efficient way to deploy Terraform ... with Terraform.
 | Check | Description |
 |---|---|
 | validate | runs `terraform validate` to make sure that the code is syntactically valid. |
-| lint | runs [TFLint](https://github.com/terraform-linters/tflint) which will find errors, depreciated syntax, and check naming conventions |
-| fmt | runs `terraform fmt --recursive --check` to ensure consistency. |
+| lint | runs [TFLint](https://github.com/terraform-linters/tflint) which will find errors, depreciated syntax, and check naming conventions. |
+| fmt | runs `terraform fmt --recursive --check` to ensure code is consistently formatted. |
 | SAST | runs [Checkov](https://www.checkov.io/) for security best practices. |
 
 ## Deployment
@@ -104,9 +104,10 @@ The pipeline can assume a cross-account role and deploy to another AWS account. 
 
 | Issue | Fix |
 |---|---|
-| Failed lint, fmt, or SAST checks | Read the report or logs to discover why the code has failed, then make a new commit. |
-| Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit. |
+| Failed lint or validate | Read the report or logs to discover why the code has failed, then make a new commit. |
+| Failed fmt | This means your code is not formatted. Run `terraform fmt --recursive` on your code, then make a new commit. |
 | Failed SAST | Read the Checkov logs (Details > Reports) and either make the correction in code or add a skip to the module inputs. |
+| Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit. |
 | `Error: error creating CodeBuild Report Group: InvalidInputException: Invalid encryption key: region does not match current region` during `terraform apply` | Ensure you have defined the correct `region` in `main.tf`.  
 | `Terraform initialized in an empty directory!` | Make sure you are in the `deploy` directory when running `terraform init`. |
 | Pipeline fails on apply with `the action failed because no branch named main was found ...` | Either nothing has been committed to the repo or the branch is incorrect (Eg using `Master` not `Main`). Either commit to the Main branch or change the module input to fix this. |
