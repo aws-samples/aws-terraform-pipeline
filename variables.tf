@@ -3,12 +3,10 @@
 
 variable "pipeline_name" {
   type = string
-  default = "single-pipeline"
 }
 
 variable "codecommit_repo" {
   type = string
-  default = "single-repo"
 }
 
 variable "branch" {
