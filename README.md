@@ -10,7 +10,7 @@ This module is designed to be deployed remotely, using the [GitHub source type](
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - An existing AWS CodeCommit repository
-- Your code must include a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that this [codebuild role](./modules/pipeline/codebuild.tf?plain=1#177) can access. An S3 backend within the same AWS account is ideal for this. 
+- Your code must include a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that this [codebuild role](./codebuild.tf?plain=1#156) can access. An S3 backend within the same AWS account is ideal for this. 
 
 ## Limitations
 - This pattern (currently) only works with CodeCommit
@@ -90,9 +90,9 @@ module "pipeline" {
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 
 ### Deploy the pipeline 
-1. Deploy the module into a different repo or a `deploy` directory in your existing CodeCommit repository. If you use a deploy directory, treat it as a new repo with a new provider and state.
-2. (Recommended) setup a remote backend for your pipeline. 
-2. Run`terraform init`, then `terraform apply` to deploy the infrastructure to your chosen AWS account.   
+1. Create a `deploy` directory in your existing CodeCommit repository and add the above module inputs. 
+2. (Recommended) Add a remote backend to the `deploy`.
+3. From the `deploy` directory run`terraform init`, then `terraform apply` to deploy the pipeline to your chosen AWS account.   
 
 ### Run the pipeline
 1. Ensure your CodeCommit repository has a remote state configured that [this codebuild policy](./modules/pipeline/codebuild.tf?plain=1#198) can access. An Amazon S3 backend within the same AWS account is ideal for this, but ensure you use a different key to your `deploy` directory. 
