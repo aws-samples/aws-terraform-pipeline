@@ -3,19 +3,26 @@
 
 variable "pipeline_name" {
   type = string
+  default = "single-pipeline"
 }
 
 variable "codecommit_repo" {
   type = string
+  default = "single-repo"
 }
 
 variable "branch" {
   type = string
+  default = "main"
 }
 
 variable "environment_variables" {
   description = "environment variables for codebuild"
   type        = map(string)
+  default = {
+    TF_VERSION     = "1.1.7"
+    TFLINT_VERSION = "0.33.0"
+  }
 }
 
 variable "checkov_skip" {

@@ -1,49 +1,15 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 
-module "validate" {
+module "validation" {
+  for_each              = local.validation_stages
   source                = "./modules/codebuild"
-  codebuild_name        = "${var.pipeline_name}-validate"
+  codebuild_name        = "${var.pipeline_name}-${each.key}"
   codebuild_role        = aws_iam_role.codebuild_validate.arn
-  environment_variables = var.environment_variables
+  environment_variables = each.value
   build_timeout         = 5
-  build_spec            = "validate.yml"
+  build_spec            = "${each.key}.yml"
   log_group             = local.log_group
-}
-
-module "fmt" {
-  source                = "./modules/codebuild"
-  codebuild_name        = "${var.pipeline_name}-fmt"
-  codebuild_role        = aws_iam_role.codebuild_validate.arn
-  environment_variables = var.environment_variables
-  build_timeout         = 5
-  build_spec            = "fmt.yml"
-  log_group             = local.log_group
-}
-
-module "lint" {
-  source                = "./modules/codebuild"
-  codebuild_name        = "${var.pipeline_name}-lint"
-  codebuild_role        = aws_iam_role.codebuild_validate.arn
-  environment_variables = var.environment_variables
-  build_timeout         = 5
-  build_spec            = "lint.yml"
-  log_group             = local.log_group
-}
-
-module "sast" {
-  source         = "./modules/codebuild"
-  codebuild_name = "${var.pipeline_name}-sast"
-  codebuild_role = aws_iam_role.codebuild_validate.arn
-  environment_variables = merge(tomap({
-    SAST_REPORT_ARN = aws_codebuild_report_group.sast.arn
-    CHECKOV_SKIPS   = local.checkov_skip
-    }),
-    var.environment_variables,
-  )
-  build_timeout = 5
-  build_spec    = "sast.yml"
-  log_group     = local.log_group
 }
 
 module "plan" {
@@ -84,6 +50,17 @@ data "aws_iam_policy_document" "codebuild_validate_assume_role" {
     principals {
       type        = "Service"
       identifiers = ["codebuild.amazonaws.com"]
+    }
+
+    dynamic "condition" {
+      for_each = local.validation_stages
+      content {
+        test     = "StringEquals"
+        variable = "aws:SourceArn"
+        values = [
+          "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-${condition.key}"
+        ]
+      }
     }
 
     condition {
@@ -171,7 +148,7 @@ data "aws_iam_policy_document" "codebuild" {
     ]
 
     resources = [
-      "${module.artifact_s3.bucket.arn}/sast/*",
+      "${module.artifact_s3.bucket.arn}/*",
     ]
   }
 }

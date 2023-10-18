@@ -4,13 +4,15 @@ An efficient way to deploy Terraform ... with Terraform.
 
 🐓 🥚 ?
 
+This module is designed to be deployed remotely, using the [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github). 
+
 ## Prerequisites
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - An existing AWS CodeCommit repository
+- Your code must include a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that this [codebuild role](./modules/pipeline/codebuild.tf?plain=1#177) can access. An S3 backend within the same AWS account is ideal for this. 
 
 ## Limitations
-- A [remote state](https://developer.hashicorp.com/terraform/language/state/remote) is required
 - This pattern (currently) only works with CodeCommit
 
 ## Architecture
@@ -33,7 +35,9 @@ An efficient way to deploy Terraform ... with Terraform.
 
 ## Deployment
 
-The module is deployed from a separate `deploy` directory within your existing CodeCommit repo. This segregates your existing code from the pipeline. 
+This module should be deployed to a separate repository. Segregation enables the pipeline to run commands against "your code" without affecting the pipeline infrastructure. 
+
+This deployment guide will use a `deploy` directory within your existing CodeCommit repo ("your repo"):
 
 ```
 your repo
@@ -42,35 +46,31 @@ your repo
 │   variables.tf    
 │
 └───deploy
-    └───main.tf     
+    └───main.tf <--module deployed here    
 ```
-
-This means terraform commands can be run against your existing repository, by the pipeline, without affecting the pipeline infrastructure. 
 
 ### Module Inputs
 
-These are the module inputs for the `main.tf` file in the `deploy` directory. It is setup for a [GitHub source type](https://developer.hashicorp.com/terraform/language/modules/sources#github) but it could be cloned and deployed locally, or from a private registry.  
-
-```
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
-  required_version = "~> 1.1"
-}
-
-provider "aws" {
-  region = "eu-west-2" 
-}
-
+```hcl
 module "pipeline" {
   source          = "github.com/aws-samples/aws-terraform-pipeline"
   pipeline_name   = "pipeline-name"
   codecommit_repo = "codecommit-repo-name"
-  branch          = "main"
+}
+```
+
+`pipeline_name` is the name of your pipeline. 
+
+`codecommit_repo` is the name of the repo with your code in it. 
+
+All other inputs are optional. 
+
+### Optional Inputs
+
+```hcl
+module "pipeline" {
+  ...
+  branch = "main"
 
   environment_variables = {
     TF_VERSION     = "1.1.7"
@@ -80,22 +80,26 @@ module "pipeline" {
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
   ]
+
 }
 ```
+`branch` is the CodeCommit branch. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
+
+`environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
+
+`checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 
 ### Deploy the pipeline 
-1. Create a `deploy` directory in your existing CodeCommit repository.
-2. Create a `main.tf` in this directory and add the above inputs, editing the variables as required.
-3. (Recommended) add a remote backend to `main.tf`. 
-4. (Optional) define Checkov skips for the pipeline. This is useful for organization-wide policies.
-5. From the `deploy` directory, run `terraform init`, then `terraform apply` on your chosen AWS account. 
+1. Deploy the module into a different repo or a `deploy` directory in your existing CodeCommit repository. If you use a deploy directory, treat it as a new repo with a new provider and state.
+2. (Recommended) setup a remote backend for your pipeline. 
+2. Run`terraform init`, then `terraform apply` to deploy the infrastructure to your chosen AWS account.   
 
 ### Run the pipeline
-1. Ensure your repository has a remote state configured that [this codebuild policy](./modules/pipeline/codebuild.tf?plain=1#198) can access. An S3 backend within the same AWS account is ideal for this, but ensure you use a different key to your `deploy` directory. 
-2. Commit changes to your repository. This will run the pipeline. 
+1. Ensure your CodeCommit repository has a remote state configured that [this codebuild policy](./modules/pipeline/codebuild.tf?plain=1#198) can access. An Amazon S3 backend within the same AWS account is ideal for this, but ensure you use a different key to your `deploy` directory. 
+2. Commit changes to your CodeCommit repository. This will run the pipeline. 
 
-### (Optional) Edit the pipeline 
-If you need to edit an existing pipeline, do so from the `deploy` directory with a `terraform apply`.
+### (Optional) Edit the pipeline
+If you need to edit an existing pipeline, do so from the `deploy` directory.
 
 ### (Optional) Setup a cross-account pipeline
 The pipeline can assume a cross-account role and deploy to another AWS account. Ensure there is a cross-account role that can be assumed by [this codebuild policy](./modules/pipeline/codebuild.tf?plain=1#198), then edit the terraform provider in your repository to include the `assume role` argument.

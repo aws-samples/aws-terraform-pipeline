@@ -28,58 +28,29 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
+
   stage {
     name = "Validation"
 
-    action {
-      name            = "validate"
+    dynamic "action" {
+      for_each = local.validation_stages
+      content {
+        name            = action.key
       category        = "Test"
       owner           = "AWS"
       provider        = "CodeBuild"
       input_artifacts = ["source_output"]
       version         = "1"
 
-      configuration = {
-        ProjectName = module.validate.codebuild_project.name
+       configuration = {
+          ProjectName = module.validation[action.key].codebuild_project.name
+        }
       }
+      
     }
-    action {
-      name            = "fmt"
-      category        = "Test"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
 
-      configuration = {
-        ProjectName = module.fmt.codebuild_project.name
-      }
-    }
-    action {
-      name            = "lint"
-      category        = "Test"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
-
-      configuration = {
-        ProjectName = module.lint.codebuild_project.name
-      }
-    }
-    action {
-      name            = "SAST"
-      category        = "Test"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      input_artifacts = ["source_output"]
-      version         = "1"
-
-      configuration = {
-        ProjectName = module.sast.codebuild_project.name
-      }
-    }
   }
+
   stage {
     name = "Plan"
 
@@ -130,6 +101,7 @@ resource "aws_codepipeline" "this" {
   }
 }
 
+
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.pipeline_name}-role"
   assume_role_policy = data.aws_iam_policy_document.codepipeline-assume-role.json
@@ -177,7 +149,11 @@ data "aws_iam_policy_document" "codepipeline-policy" {
   statement {
     effect = "Allow"
     actions = [
-      "codeCommit:*"
+      "codecommit:GetBranch",
+      "codecommit:GetCommit",
+      "codecommit:UploadArchive",
+      "codecommit:GetUploadArchiveStatus",      
+      "codecommit:CancelUploadArchive"
     ]
 
     resources = [
@@ -193,7 +169,7 @@ data "aws_iam_policy_document" "codepipeline-policy" {
     ]
 
     resources = [
-      "*"
+      "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
     ]
   }
 
