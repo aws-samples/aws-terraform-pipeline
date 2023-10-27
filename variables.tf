@@ -18,7 +18,7 @@ variable "environment_variables" {
   description = "environment variables for codebuild"
   type        = map(string)
   default = {
-    TF_VERSION     = "1.1.7"
+    TF_VERSION     = "1.5.7"
     TFLINT_VERSION = "0.33.0"
   }
 }
@@ -28,4 +28,3 @@ variable "checkov_skip" {
   type        = list(string)
   default     = [""]
 }
-
