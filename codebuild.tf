@@ -52,25 +52,11 @@ data "aws_iam_policy_document" "codebuild_validate_assume_role" {
       identifiers = ["codebuild.amazonaws.com"]
     }
 
-    dynamic "condition" {
-      for_each = local.validation_stages
-      content {
-        test     = "StringEquals"
-        variable = "aws:SourceArn"
-        values = [
-          "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-${condition.key}"
-        ]
-      }
-    }
-
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
       values = [
-        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-validate",
-        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-fmt",
-        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-lint",
-        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-sast"
+        "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
       ]
     }
   }
