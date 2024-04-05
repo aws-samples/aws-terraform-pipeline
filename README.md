@@ -1,4 +1,4 @@
-# AWS Terraform pipeline module
+# Terraform pipeline module
  
 Deploy Terraform ... with terraform. 
 
@@ -24,7 +24,6 @@ pipeline repo
 ```
 
 Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. A single pipeline, or bootstrap, repo could be used in an account to provision multiple pipelines for your codecommit repositories. 
-
 
 
 ## Module Inputs
