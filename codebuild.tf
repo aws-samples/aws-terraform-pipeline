@@ -174,3 +174,4 @@ resource "aws_codebuild_report_group" "sast" {
     }
   }
 }
+
