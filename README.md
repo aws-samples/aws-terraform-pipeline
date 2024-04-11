@@ -47,7 +47,7 @@ module "pipeline" {
   branch = "main"
 
   environment_variables = {
-    TF_VERSION     = "5.0"
+    TF_VERSION     = "1.5.7"
     TFLINT_VERSION = "0.33.0"
   }
 
