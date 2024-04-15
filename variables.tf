@@ -10,7 +10,7 @@ variable "codecommit_repo" {
 }
 
 variable "branch" {
-  type = string
+  type    = string
   default = "main"
 }
 
@@ -18,7 +18,7 @@ variable "environment_variables" {
   description = "environment variables for codebuild"
   type        = map(string)
   default = {
-    TF_VERSION     = "5.0"
+    TF_VERSION     = "1.5.7"
     TFLINT_VERSION = "0.33.0"
   }
 }
