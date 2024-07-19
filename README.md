@@ -44,8 +44,9 @@ module "pipeline" {
 ```hcl
 module "pipeline" {
   ...
-  branch  = "main"
-  kms_key = aws_kms_key.this.arn
+  branch                = "main"
+  kms_key               = aws_kms_key.this.arn
+  access_logging_bucket = aws_s3_bucket.this.id
 
   environment_variables = {
     TF_VERSION     = "1.5.7"
@@ -65,7 +66,6 @@ module "pipeline" {
 `environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
 
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
-
 
 
 ## Architecture

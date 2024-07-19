@@ -81,3 +81,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
   }
 }
 
+resource "aws_s3_bucket_logging" "this" {
+  count  = var.access_logging_bucket == "" ? 0 : 1
+  bucket = aws_s3_bucket.this.id
+
+  target_bucket = var.access_logging_bucket
+  target_prefix = "${var.bucket_name}/"
+}

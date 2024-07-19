@@ -176,10 +176,11 @@ data "aws_iam_policy_document" "codepipeline-policy" {
 }
 
 module "artifact_s3" {
-  source            = "./modules/s3"
-  bucket_name       = "${var.pipeline_name}-artifacts-${data.aws_caller_identity.current.account_id}"
-  enable_retention  = true
-  retention_in_days = "90"
-  kms_key           = var.kms_key
+  source                = "./modules/s3"
+  bucket_name           = "${var.pipeline_name}-artifacts-${data.aws_caller_identity.current.account_id}"
+  enable_retention      = true
+  retention_in_days     = "90"
+  kms_key               = var.kms_key
+  access_logging_bucket = var.access_logging_bucket
 }
 
