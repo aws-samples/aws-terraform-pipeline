@@ -1,4 +1,4 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.main
 // SPDX-License-Identifier: MIT-0
 
 resource "aws_codebuild_project" "this" {

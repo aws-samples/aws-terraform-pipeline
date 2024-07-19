@@ -15,3 +15,8 @@ variable "enable_retention" {
   description = "if true, a retention policy is enabled"
   type        = bool
 }
+
+variable "kms_key" {
+  description = "kms key to be used"
+  type        = string
+}
