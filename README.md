@@ -44,7 +44,8 @@ module "pipeline" {
 ```hcl
 module "pipeline" {
   ...
-  branch = "main"
+  branch  = "main"
+  kms_key = aws_kms_key.this.arn
 
   environment_variables = {
     TF_VERSION     = "1.5.7"
@@ -58,6 +59,8 @@ module "pipeline" {
 }
 ```
 `branch` is the CodeCommit branch. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
+
+`kms_key` can be used to encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`. 
 
 `environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
 
