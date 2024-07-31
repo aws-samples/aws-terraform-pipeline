@@ -15,11 +15,24 @@ resource "aws_s3_bucket_public_access_block" "this" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  count  = var.kms_key == "" ? 1 : 0
   bucket = aws_s3_bucket.this.bucket
 
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "that" {
+  count  = var.kms_key == "" ? 0 : 1
+  bucket = aws_s3_bucket.this.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = var.kms_key
+      sse_algorithm     = "aws:kms"
     }
   }
 }
@@ -67,3 +80,4 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     status = "Enabled"
   }
 }
+

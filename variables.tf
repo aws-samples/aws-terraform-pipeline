@@ -28,3 +28,9 @@ variable "checkov_skip" {
   type        = list(string)
   default     = [""]
 }
+
+variable "kms_key" {
+  description = "kms key to be used"
+  type        = string
+  default     = ""
+}
