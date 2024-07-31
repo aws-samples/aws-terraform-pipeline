@@ -20,3 +20,8 @@ variable "kms_key" {
   description = "kms key to be used"
   type        = string
 }
+
+variable "access_logging_bucket" {
+  description = "s3 server access logging bucket"
+  type        = string
+}

@@ -34,3 +34,8 @@ variable "kms_key" {
   type        = string
   default     = ""
 }
+
+variable "access_logging_bucket" {
+  description = "s3 server access logging bucket"
+  default     = ""
+}
