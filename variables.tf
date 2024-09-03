@@ -37,5 +37,12 @@ variable "kms_key" {
 
 variable "access_logging_bucket" {
   description = "s3 server access logging bucket"
+  type        = string
   default     = ""
+}
+
+variable "approval_stage" {
+  description = "turn on approval stage"
+  type        = bool
+  default     = true
 }

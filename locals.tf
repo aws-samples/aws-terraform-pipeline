@@ -18,7 +18,9 @@ locals {
   }
 
   kms_key = var.kms_key == "" ? data.aws_kms_key.s3.arn : var.kms_key
-  # "${var.environment == "PROD" ? "east" : ""}"
+
+  approval_stage = var.approval_stage ? 1 : 0
+
 }
 
 
