@@ -32,13 +32,13 @@ variable "checkov_skip" {
 variable "kms_key" {
   description = "kms key to be used"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "access_logging_bucket" {
   description = "s3 server access logging bucket"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "approval_stage" {
