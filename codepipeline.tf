@@ -22,7 +22,7 @@ resource "aws_codepipeline" "this" {
       configuration = {
         RepositoryName   = var.service == "CodeCommit" ? var.repo : null
         FullRepositoryId = var.service == "CodeCommit" ? null : var.repo
-        ConnectionArn    = var.service == "CodeCommit" ? null : aws_codestarconnections_connection.this.arn
+        ConnectionArn    = var.service == "CodeCommit" ? null : aws_codestarconnections_connection.this[0].arn
         BranchName       = var.branch
       }
     }
