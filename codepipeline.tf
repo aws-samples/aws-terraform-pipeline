@@ -192,8 +192,8 @@ module "artifact_s3" {
 }
 
 resource "aws_codestarconnections_connection" "this" {
-  count         = var.vcs == null ? 0 : 1
-  name          = var.vcs
-  provider_type = var.vcs
+  count         = var.service == "CodeCommit" ? 0 : 1
+  name          = var.service
+  provider_type = var.service
 }
 
