@@ -5,7 +5,7 @@ variable "pipeline_name" {
   type = string
 }
 
-variable "codecommit_repo" {
+variable "repo" {
   type = string
 }
 
@@ -46,3 +46,9 @@ variable "approval_stage" {
   type        = bool
   default     = true
 }
+
+variable "service" {
+  type    = string
+  default = "CodeCommit"
+}
+

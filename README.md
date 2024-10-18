@@ -1,11 +1,12 @@
 # Terraform pipeline module
  
-Deploy Terraform ... with terraform. 
+Deploy terraform ... with terraform. 
 
 (🐓 🥚 ?)
 
 ## Prerequisites
-- An existing AWS CodeCommit repository ("your repo") with a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the codebuild role can access. 
+- An existing AWS CodeCommit repository ("your repo") with a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the codebuild role can access; *or*
+- A [CodeStar host](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-hosts.html) for the third-party source of your choice (GitHub, Gitlab, etc)
 
 ## Deployment
 
@@ -19,25 +20,37 @@ your repo
    main.tf
    variables.tf    
 
-pipeline repo 
+other repo 
    main.tf <--module deployed here
 ```
 
-Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. A single pipeline, or bootstrap, repo could be used in an account to provision multiple pipelines for your codecommit repositories. 
+Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. Typically this could be an infrastructure or bootstrap repo for the AWS account thats used to provision infrastructure and/or multiple pipelines.
 
 
 ## Module Inputs
 
+AWS Codecommit:
 ```hcl
 module "pipeline" {
-  source          = "github.com/aws-samples/aws-terraform-pipeline"
-  pipeline_name   = "pipeline-name"
-  codecommit_repo = "codecommit-repo-name"
+  source        = "github.com/aws-samples/aws-terraform-pipeline"
+  pipeline_name = "pipeline-name"
+  repo          = "codecommit-repo-name"
+}
+```
+Third-party service:
+```hcl
+module "pipeline" {
+  source        = "github.com/aws-samples/aws-terraform-pipeline"
+  pipeline_name = "pipeline-name"
+  repo          = "organization/repo"
+  service       = "GitHub"
 }
 ```
 `pipeline_name` is used to name the pipeline and prefix other resources created, like IAM roles. 
 
-`codecommit_repo` is the name of your existing repo that the pipeline will use as a source. 
+`repo` is the name of your existing repo that the pipeline will use as a source. If you are using a third-party service, the format is "my-organization/repo"  
+
+`service` is the git repository service. It defaults to `CodeCommit`. Other valid values are `Bitbucket`, `GitHub`, `GitHubEnterpriseServer`, `GitLab` or `GitLabSelfManage`
 
 ### Optional Inputs
 

@@ -12,19 +12,18 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Source"
-
     action {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = "CodeCommit"
+      provider         = var.service == "CodeCommit" ? "CodeCommit" : "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
-
       configuration = {
-        RepositoryName       = var.codecommit_repo
-        BranchName           = var.branch
-        PollForSourceChanges = false
+        RepositoryName   = var.service == "CodeCommit" ? var.repo : null
+        FullRepositoryId = var.service == "CodeCommit" ? null : var.repo
+        ConnectionArn    = var.service == "CodeCommit" ? null : aws_codestarconnections_connection.this.arn
+        BranchName       = var.branch
       }
     }
   }
@@ -190,5 +189,11 @@ module "artifact_s3" {
   retention_in_days     = "90"
   kms_key               = var.kms_key
   access_logging_bucket = var.access_logging_bucket
+}
+
+resource "aws_codestarconnections_connection" "this" {
+  count         = var.vcs == null ? 0 : 1
+  name          = var.vcs
+  provider_type = var.vcs
 }
 
