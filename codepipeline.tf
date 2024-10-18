@@ -164,7 +164,7 @@ data "aws_iam_policy_document" "codepipeline-policy" {
     ]
 
     resources = [
-      "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.codecommit_repo}"
+      "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}"
     ]
   }
 
