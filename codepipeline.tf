@@ -20,8 +20,8 @@ resource "aws_codepipeline" "this" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        RepositoryName   = can(var.connection) ? null : var.repo
-        FullRepositoryId = can(var.connection) ? var.repo : null
+        RepositoryName   = var.connection == null ? var.repo : null
+        FullRepositoryId = var.connection == null ? null : var.repo
         ConnectionArn    = var.connection
         BranchName       = var.branch
       }
