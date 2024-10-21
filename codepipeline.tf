@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: MIT-0
 
 resource "aws_codepipeline" "this" {
-  name     = var.pipeline_name
-  role_arn = aws_iam_role.codepipeline_role.arn
+  name          = var.pipeline_name
+  pipeline_type = "V2"
+  role_arn      = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
     location = module.artifact_s3.bucket.id
@@ -12,19 +13,18 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Source"
-
     action {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = "CodeCommit"
+      provider         = var.connection == null ? "CodeCommit" : "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
-
       configuration = {
-        RepositoryName       = var.codecommit_repo
-        BranchName           = var.branch
-        PollForSourceChanges = false
+        RepositoryName   = var.connection == null ? var.repo : null
+        FullRepositoryId = var.connection == null ? null : var.repo
+        ConnectionArn    = var.connection
+        BranchName       = var.branch
       }
     }
   }
@@ -85,9 +85,6 @@ resource "aws_codepipeline" "this" {
           ExternalEntityLink = "https://${data.aws_region.current.name}.console.aws.amazon.com/codesuite/codebuild/${data.aws_caller_identity.current.account_id}/projects/${var.pipeline_name}-plan/"
         }
       }
-
-
-
     }
   }
 
@@ -133,11 +130,11 @@ resource "aws_iam_role_policy_attachment" "codepipeline" {
 }
 
 resource "aws_iam_policy" "codepipeline" {
-  name   = "${var.pipeline_name}-role"
-  policy = data.aws_iam_policy_document.codepipeline-policy.json
+  name   = "${var.pipeline_name}-policy"
+  policy = data.aws_iam_policy_document.codepipeline.json
 }
 
-data "aws_iam_policy_document" "codepipeline-policy" {
+data "aws_iam_policy_document" "codepipeline" {
   statement {
     effect = "Allow"
     actions = [
@@ -157,21 +154,6 @@ data "aws_iam_policy_document" "codepipeline-policy" {
   statement {
     effect = "Allow"
     actions = [
-      "codecommit:GetBranch",
-      "codecommit:GetCommit",
-      "codecommit:UploadArchive",
-      "codecommit:GetUploadArchiveStatus",
-      "codecommit:CancelUploadArchive"
-    ]
-
-    resources = [
-      "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.codecommit_repo}"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
       "codebuild:BatchGetBuilds",
       "codebuild:StartBuild"
     ]
@@ -181,6 +163,21 @@ data "aws_iam_policy_document" "codepipeline-policy" {
     ]
   }
 
+  statement {
+    effect = "Allow"
+    actions = [
+      "codecommit:GetBranch",
+      "codecommit:GetCommit",
+      "codecommit:UploadArchive",
+      "codecommit:GetUploadArchiveStatus",
+      "codecommit:CancelUploadArchive",
+      "codestar-connections:UseConnection"
+    ]
+
+    resources = [
+      var.connection == null ? "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}" : var.connection
+    ]
+  }
 }
 
 module "artifact_s3" {
