@@ -16,7 +16,7 @@ resource "aws_codepipeline" "this" {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = can(var.connection) ? "CodeStarSourceConnection" : "CodeCommit"
+      provider         = var.connection == null ? "CodeCommit" : "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
