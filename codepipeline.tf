@@ -84,9 +84,6 @@ resource "aws_codepipeline" "this" {
           ExternalEntityLink = "https://${data.aws_region.current.name}.console.aws.amazon.com/codesuite/codebuild/${data.aws_caller_identity.current.account_id}/projects/${var.pipeline_name}-plan/"
         }
       }
-
-
-
     }
   }
 
@@ -132,11 +129,16 @@ resource "aws_iam_role_policy_attachment" "codepipeline" {
 }
 
 resource "aws_iam_policy" "codepipeline" {
-  name   = "${var.pipeline_name}-role"
-  policy = var.service == "CodeCommit" ? data.aws_iam_policy_document.codepipeline_cc.json : data.aws_iam_policy_document.codepipeline_cs.json
+  name   = "${var.pipeline_name}-policy"
+  policy = data.aws_iam_policy_document.codepipeline.json
 }
 
-data "aws_iam_policy_document" "codepipeline_cc" {
+resource "aws_iam_policy" "codepipeline_repo" {
+  name   = "${var.pipeline_name}-repo"
+  policy = can(var.connection) ? data.aws_iam_policy_document.codepipeline_connector.json : data.aws_iam_policy_document.codepipeline_codecommit.json
+}
+
+data "aws_iam_policy_document" "codepipeline" {
   statement {
     effect = "Allow"
     actions = [
@@ -153,6 +155,20 @@ data "aws_iam_policy_document" "codepipeline_cc" {
     ]
   }
 
+  statement {
+    effect = "Allow"
+    actions = [
+      "codebuild:BatchGetBuilds",
+      "codebuild:StartBuild"
+    ]
+
+    resources = [
+      "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "codepipeline_codecommit" {
   statement {
     effect = "Allow"
     actions = [
@@ -167,37 +183,9 @@ data "aws_iam_policy_document" "codepipeline_cc" {
       "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}"
     ]
   }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "codebuild:BatchGetBuilds",
-      "codebuild:StartBuild"
-    ]
-
-    resources = [
-      "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
-    ]
-  }
 }
 
-data "aws_iam_policy_document" "codepipeline_cs" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:GetObject",
-      "s3:GetObjectVersion",
-      "s3:GetBucketVersioning",
-      "s3:PutObjectAcl",
-      "s3:PutObject"
-    ]
-
-    resources = [
-      "${module.artifact_s3.bucket.arn}",
-      "${module.artifact_s3.bucket.arn}/*"
-    ]
-  }
-
+data "aws_iam_policy_document" "codepipeline_connector" {
   statement {
     effect = "Allow"
     actions = [
@@ -205,19 +193,7 @@ data "aws_iam_policy_document" "codepipeline_cs" {
     ]
 
     resources = [
-      "arn:aws:codestar-connections:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:connection/*"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "codebuild:BatchGetBuilds",
-      "codebuild:StartBuild"
-    ]
-
-    resources = [
-      "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
+      var.connection
     ]
   }
 }
