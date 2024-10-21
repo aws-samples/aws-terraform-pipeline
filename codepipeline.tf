@@ -174,7 +174,7 @@ data "aws_iam_policy_document" "codepipeline" {
     ]
 
     resources = [
-      can(var.connection) ? var.connection : "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}"
+      var.connection == null ? "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}" : var.connection
     ]
   }
 }
