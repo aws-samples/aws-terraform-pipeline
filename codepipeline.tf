@@ -16,13 +16,13 @@ resource "aws_codepipeline" "this" {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = var.service == "CodeCommit" ? "CodeCommit" : "CodeStarSourceConnection"
+      provider         = can(var.connection) ? "CodeStarSourceConnection" : "CodeCommit"
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        RepositoryName   = var.service == "CodeCommit" ? var.repo : null
-        FullRepositoryId = var.service == "CodeCommit" ? null : var.repo
-        ConnectionArn    = var.service == "CodeCommit" ? null : aws_codestarconnections_connection.this[0].arn
+        RepositoryName   = can(var.connection) ? null : var.repo
+        FullRepositoryId = can(var.connection) ? var.repo : null
+        ConnectionArn    = var.connection
         BranchName       = var.branch
       }
     }
@@ -201,7 +201,7 @@ data "aws_iam_policy_document" "codepipeline_cs" {
   statement {
     effect = "Allow"
     actions = [
-      "codeconnections:UseConnection"
+      "codestar-connections:UseConnection"
     ]
 
     resources = [
@@ -229,11 +229,5 @@ module "artifact_s3" {
   retention_in_days     = "90"
   kms_key               = var.kms_key
   access_logging_bucket = var.access_logging_bucket
-}
-
-resource "aws_codestarconnections_connection" "this" {
-  count         = var.service == "CodeCommit" ? 0 : 1
-  name          = var.service
-  provider_type = var.service
 }
 

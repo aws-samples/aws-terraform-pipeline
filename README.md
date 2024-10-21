@@ -6,12 +6,11 @@ Deploy terraform ... with terraform.
 
 ## Prerequisites
 - An existing AWS CodeCommit repository ("your repo") with a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the codebuild role can access; *or*
-- A [CodeStar host](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-hosts.html) for the third-party source of your choice (GitHub, Gitlab, etc)
+- An existing [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source of your choice (GitHub, Gitlab, etc)
 
 ## Deployment
 
 This module must be deployed to a separate repository.
-
 
 ```
 your repo
@@ -20,7 +19,7 @@ your repo
    main.tf
    variables.tf    
 
-other repo 
+pipeline repo 
    main.tf <--module deployed here
 ```
 
@@ -43,14 +42,14 @@ module "pipeline" {
   source        = "github.com/aws-samples/aws-terraform-pipeline"
   pipeline_name = "pipeline-name"
   repo          = "organization/repo"
-  service       = "GitHub"
+  connection    = aws_codestarconnections_connection.this.arn
 }
 ```
 `pipeline_name` is used to name the pipeline and prefix other resources created, like IAM roles. 
 
 `repo` is the name of your existing repo that the pipeline will use as a source. If you are using a third-party service, the format is "my-organization/repo"  
 
-`service` is the git repository service. It defaults to `CodeCommit`. Other valid values are `Bitbucket`, `GitHub`, `GitHubEnterpriseServer`, `GitLab` or `GitLabSelfManage`
+`connection` is the connection arn of the [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party repo. 
 
 ### Optional Inputs
 

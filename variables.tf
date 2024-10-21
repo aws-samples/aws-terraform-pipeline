@@ -47,8 +47,8 @@ variable "approval_stage" {
   default     = true
 }
 
-variable "service" {
+variable "connection" {
   type    = string
-  default = "CodeCommit"
+  default = null
 }
 
