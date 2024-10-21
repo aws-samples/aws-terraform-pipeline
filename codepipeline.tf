@@ -133,10 +133,10 @@ resource "aws_iam_role_policy_attachment" "codepipeline" {
 
 resource "aws_iam_policy" "codepipeline" {
   name   = "${var.pipeline_name}-role"
-  policy = data.aws_iam_policy_document.codepipeline-policy.json
+  policy = var.service == "CodeCommit" ? data.aws_iam_policy_document.codepipeline_cc.json : data.aws_iam_policy_document.codepipeline_cs.json
 }
 
-data "aws_iam_policy_document" "codepipeline-policy" {
+data "aws_iam_policy_document" "codepipeline_cc" {
   statement {
     effect = "Allow"
     actions = [
@@ -179,7 +179,47 @@ data "aws_iam_policy_document" "codepipeline-policy" {
       "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
     ]
   }
+}
 
+data "aws_iam_policy_document" "codepipeline_cs" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:GetObjectVersion",
+      "s3:GetBucketVersioning",
+      "s3:PutObjectAcl",
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "${module.artifact_s3.bucket.arn}",
+      "${module.artifact_s3.bucket.arn}/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "codeconnections:UseConnection"
+    ]
+
+    resources = [
+      "arn:aws:codestar-connections:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:connection/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "codebuild:BatchGetBuilds",
+      "codebuild:StartBuild"
+    ]
+
+    resources = [
+      "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
+    ]
+  }
 }
 
 module "artifact_s3" {
