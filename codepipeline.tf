@@ -133,11 +133,6 @@ resource "aws_iam_policy" "codepipeline" {
   policy = data.aws_iam_policy_document.codepipeline.json
 }
 
-resource "aws_iam_policy" "codepipeline_repo" {
-  name   = "${var.pipeline_name}-repo"
-  policy = can(var.connection) ? data.aws_iam_policy_document.codepipeline_connector.json : data.aws_iam_policy_document.codepipeline_codecommit.json
-}
-
 data "aws_iam_policy_document" "codepipeline" {
   statement {
     effect = "Allow"
@@ -166,9 +161,7 @@ data "aws_iam_policy_document" "codepipeline" {
       "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:project/${var.pipeline_name}-*"
     ]
   }
-}
 
-data "aws_iam_policy_document" "codepipeline_codecommit" {
   statement {
     effect = "Allow"
     actions = [
@@ -176,24 +169,12 @@ data "aws_iam_policy_document" "codepipeline_codecommit" {
       "codecommit:GetCommit",
       "codecommit:UploadArchive",
       "codecommit:GetUploadArchiveStatus",
-      "codecommit:CancelUploadArchive"
-    ]
-
-    resources = [
-      "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}"
-    ]
-  }
-}
-
-data "aws_iam_policy_document" "codepipeline_connector" {
-  statement {
-    effect = "Allow"
-    actions = [
+      "codecommit:CancelUploadArchive",
       "codestar-connections:UseConnection"
     ]
 
     resources = [
-      var.connection
+      try(var.connection, "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}")
     ]
   }
 }
