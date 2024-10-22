@@ -22,10 +22,12 @@ resource "aws_codepipeline" "this" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        RepositoryName   = var.connection == null ? var.repo : null
-        FullRepositoryId = var.connection == null ? null : var.repo
-        ConnectionArn    = var.connection
-        BranchName       = var.branch
+        RepositoryName       = var.connection == null ? var.repo : null
+        FullRepositoryId     = var.connection == null ? null : var.repo
+        ConnectionArn        = var.connection
+        BranchName           = var.branch
+        PollForSourceChanges = var.connection == null ? false : null
+        DetectChanges        = var.connection == null ? null : false
       }
     }
   }
