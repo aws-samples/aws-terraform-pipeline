@@ -27,7 +27,7 @@ resource "aws_codepipeline" "this" {
         ConnectionArn        = var.connection
         BranchName           = var.branch
         PollForSourceChanges = var.connection == null ? false : null
-        DetectChanges        = var.connection == null ? null : false
+        DetectChanges        = var.connection == null ? null : var.detect_changes
       }
     }
   }

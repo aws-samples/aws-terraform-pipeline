@@ -52,3 +52,8 @@ variable "connection" {
   default = null
 }
 
+variable "detect_changes" {
+  type    = string
+  default = false
+}
+
