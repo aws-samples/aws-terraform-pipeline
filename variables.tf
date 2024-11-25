@@ -41,12 +41,6 @@ variable "access_logging_bucket" {
   default     = null
 }
 
-variable "approval_stage" {
-  description = "turn on approval stage"
-  type        = bool
-  default     = true
-}
-
 variable "connection" {
   type    = string
   default = null

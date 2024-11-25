@@ -5,12 +5,14 @@ Deploy terraform ... with terraform.
 (🐓 🥚 ?)
 
 ## Prerequisites
-- An existing AWS CodeCommit repository ("your repo") with a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the codebuild role can access; *or*
-- An existing [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source of your choice (GitHub, Gitlab, etc)
+- An existing AWS CodeCommit repository with a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the codebuild role can access; *or*
+- A third-party source (GitHub, Gitlab, etc) and a [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to it
+- [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access ([Amazon S3](https://developer.hashicorp.com/terraform/language/backend/s3) in the same AWS account)
+- (Optional) A cross-account IAM role in the target accounts, that can be assumed by the pipeline. 
 
 ## Deployment
 
-This module must be deployed to a separate repository.
+This module must be deployed to a separate repository to the code you want to push through it.
 
 ```
 your repo
@@ -23,8 +25,7 @@ pipeline repo
    main.tf <--module deployed here
 ```
 
-Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. Typically this could be an infrastructure or bootstrap repo for the AWS account thats used to provision infrastructure and/or multiple pipelines.
-
+Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. This could be an infrastructure or bootstrap repo for the AWS account.
 
 ## Module Inputs
 
@@ -105,7 +106,7 @@ module "pipeline" {
 ## Setup a cross-account pipeline
 The pipeline can assume a cross-account role and deploy to another AWS account.
 
-1. Ensure there is a [cross-account IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) that can be assumed by the codebuild role, 
+1. Ensure there is a [cross-account IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) that can be assumed by the codebuild roles (validate and execute). 
 2. Edit the provider in "your repo" to include the [assume role argument](https://developer.hashicorp.com/terraform/tutorials/aws/aws-assumerole).
 
 ```hcl
@@ -117,6 +118,7 @@ provider "aws" {
   }
 }
 ```
+3. Commit the changes and run the pipeline.
 
 ## Troubleshooting
 
@@ -131,7 +133,7 @@ provider "aws" {
 
 ## Best Practices
 
-The CodeBuild execution role is highly privileged as this pattern is designed for a wide audience to deploy any resource to an AWS account. You may want to reduce the scope of the role and define specific services or actions, depending on your requirements.
+The CodeBuild execution role is highly privileged as this pattern is designed for a wide audience to deploy any resource to an AWS account. It assumes there are strong organizational controls in place and good segregation practices at the AWS account level. 
 
 Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline pipeline should be tightly controlled. Here are some ideas:
 - [Specify approval permission for specific pipelines and approval actions](https://docs.aws.amazon.com/codepipeline/latest/userguide/approvals-iam-permissions.html#approvals-iam-permissions-limited).
