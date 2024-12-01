@@ -17,10 +17,4 @@ locals {
     )
   }
 
-  kms_key = var.kms_key == null ? data.aws_kms_key.s3.arn : var.kms_key
-
-  approval_stage = var.approval_stage ? ["Approval"] : []
-
 }
-
-
