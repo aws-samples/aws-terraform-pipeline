@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT-0
 
 resource "aws_cloudwatch_event_rule" "this" {
-  name        = "invoke-${var.pipeline_name}"
+  name        = var.pipeline_name
   description = "Invokes pipeline when there is a new CodeCommit repo commit"
   event_pattern = jsonencode({
 
@@ -33,13 +33,13 @@ resource "aws_cloudwatch_event_rule" "this" {
 
 resource "aws_cloudwatch_event_target" "this" {
   rule      = aws_cloudwatch_event_rule.this.name
-  target_id = "invoke-${var.pipeline_name}"
+  target_id = var.pipeline_name
   arn       = aws_codepipeline.this.arn
   role_arn  = aws_iam_role.eventbridge.arn
 }
 
 resource "aws_iam_role" "eventbridge" {
-  name               = "invoke-${var.pipeline_name}-role"
+  name               = "${var.pipeline_name}-eventbridge"
   assume_role_policy = data.aws_iam_policy_document.eventbridge_assume.json
 }
 
@@ -69,7 +69,7 @@ resource "aws_iam_role_policy_attachment" "eventbridge" {
 }
 
 resource "aws_iam_policy" "eventbridge" {
-  name   = "invoke-${var.pipeline_name}-policy"
+  name   = "${var.pipeline_name}-eventbridge"
   policy = data.aws_iam_policy_document.eventbridge.json
 }
 

@@ -33,16 +33,16 @@ module "apply" {
 }
 
 resource "aws_iam_role" "codebuild_validate" {
-  name               = "${var.pipeline_name}-codebuild-validate-role"
-  assume_role_policy = data.aws_iam_policy_document.codebuild_validate_assume_role.json
+  name               = "${var.pipeline_name}-codebuild-validate"
+  assume_role_policy = data.aws_iam_policy_document.codebuild_validate_assume.json
 }
 
 resource "aws_iam_role" "codebuild_execution" {
-  name               = "${var.pipeline_name}-codebuild-execution-role"
-  assume_role_policy = data.aws_iam_policy_document.codebuild_execution_assume_role.json
+  name               = "${var.pipeline_name}-codebuild-execution"
+  assume_role_policy = data.aws_iam_policy_document.codebuild_execution_assume.json
 }
 
-data "aws_iam_policy_document" "codebuild_validate_assume_role" {
+data "aws_iam_policy_document" "codebuild_validate_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "codebuild_validate_assume_role" {
   }
 }
 
-data "aws_iam_policy_document" "codebuild_execution_assume_role" {
+data "aws_iam_policy_document" "codebuild_execution_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -90,11 +90,11 @@ resource "aws_iam_role_policy_attachment" "codebuild_validate" {
 
 resource "aws_iam_role_policy_attachment" "codebuild_execution" {
   role       = aws_iam_role.codebuild_execution.name
-  policy_arn = aws_iam_policy.codebuild_execution.arn
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
 resource "aws_iam_policy" "codebuild_validate" {
-  name   = "${var.pipeline_name}-codebuild-validate-policy"
+  name   = "${var.pipeline_name}-codebuild-validate"
   policy = data.aws_iam_policy_document.codebuild.json
 }
 
@@ -134,21 +134,15 @@ data "aws_iam_policy_document" "codebuild" {
     ]
 
     resources = [
-      "${module.artifact_s3.bucket.arn}/*",
+      "${aws_s3_bucket.this.arn}/*",
     ]
   }
-}
 
-resource "aws_iam_policy" "codebuild_execution" {
-  name   = "${var.pipeline_name}-codebuild-execution-policy"
-  policy = data.aws_iam_policy_document.codebuild_execution_policy.json
-}
-
-data "aws_iam_policy_document" "codebuild_execution_policy" {
   statement {
     effect = "Allow"
     actions = [
-      "*"
+      "kms:GenerateDataKey*",
+      "kms:Decrypt"
     ]
 
     resources = [
@@ -166,7 +160,7 @@ resource "aws_codebuild_report_group" "sast" {
     type = "S3"
 
     s3_destination {
-      bucket              = module.artifact_s3.bucket.id
+      bucket              = aws_s3_bucket.this.id
       encryption_disabled = false
       encryption_key      = try(var.kms_key, data.aws_kms_key.s3.arn)
       packaging           = "NONE"
