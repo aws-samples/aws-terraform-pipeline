@@ -1,4 +1,4 @@
-# Terraform pipeline module
+# terraform-pipeline
  
 Deploy terraform ... with terraform. 
 
