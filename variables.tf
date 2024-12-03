@@ -5,7 +5,7 @@ variable "pipeline_name" {
   type = string
 }
 
-variable "codecommit_repo" {
+variable "repo" {
   type = string
 }
 
@@ -41,8 +41,17 @@ variable "access_logging_bucket" {
   default     = null
 }
 
-variable "approval_stage" {
-  description = "turn on approval stage"
-  type        = bool
-  default     = true
+variable "connection" {
+  type    = string
+  default = null
+}
+
+variable "detect_changes" {
+  type    = string
+  default = false
+}
+
+variable "codebuild_policy" {
+  type    = string
+  default = null
 }
