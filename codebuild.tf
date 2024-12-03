@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "codebuild_execution_assume" {
 
 resource "aws_iam_role_policy_attachment" "codebuild_validate" {
   role       = aws_iam_role.codebuild_validate.name
-  policy_arn = aws_iam_policy.codebuild_execution.arn
+  policy_arn = aws_iam_policy.codebuild_validate.arn
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_execution" {
