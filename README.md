@@ -1,14 +1,15 @@
 # terraform-pipeline
  
-Deploy terraform ... with terraform. 
+Deploy terraform with terraform. 
 
-(🐓 🥚 ?)
+🐓 🥚 ?
+
+(If you want to deploy to multiple AWS accounts use [terraform-multi-account-pipeline](https://github.com/aws-samples/terraform-multi-account-pipeline))
 
 ## Prerequisites
-- An existing AWS CodeCommit repository with a [remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the codebuild role can access; *or*
-- A third-party source (GitHub, Gitlab, etc) and a [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to it
-- [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access ([Amazon S3](https://developer.hashicorp.com/terraform/language/backend/s3) in the same AWS account)
-- (Optional) A cross-account IAM role in the target accounts, that can be assumed by the pipeline. 
+- An existing AWS CodeCommit repository *OR* an [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source and repo of your choice (GitHub, Gitlab, etc)
+- [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access (using the CodeBuild IAM role) 
+- (Optional) A cross-account IAM role in the target accounts, that can be assumed by the pipeline (using the CodeBuild IAM role) 
 
 ## Deployment
 
@@ -16,9 +17,9 @@ This module must be deployed to a separate repository to the code you want to pu
 
 ```
 your repo
-   README.md
    backend.tf 
    main.tf
+   provider.tf
    variables.tf    
 
 pipeline repo 
@@ -61,6 +62,7 @@ module "pipeline" {
   detect_changes        = true
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
+  codebuild_policy      = aws_iam_policy.this.arn 
 
   environment_variables = {
     TF_VERSION     = "1.5.7"
@@ -77,7 +79,11 @@ module "pipeline" {
 
 `detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo.  
 
-`kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`. 
+`kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`.
+
+`access_logging_bucket` can be used to send S3 server access logs to your existing access logging bucket.
+
+`codebuild_policy` replaces the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy. This can be used if you want to scope the permissions of the pipeline. 
 
 `environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
 
@@ -133,7 +139,7 @@ provider "aws" {
 
 ## Best Practices
 
-The CodeBuild execution role is highly privileged as this pattern is designed for a wide audience to deploy any resource to an AWS account. It assumes there are strong organizational controls in place and good segregation practices at the AWS account level. 
+The CodeBuild execution role uses the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy  as this pattern is designed for a wide audience to deploy any resource to an AWS account. It assumes there are strong organizational controls in place and good segregation practices at the AWS account level. If you need to better scope the policy, the `codebuild_policy` optional input can be used to replace this with an IAM policy of your choosing. 
 
 Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline pipeline should be tightly controlled. Here are some ideas:
 - [Specify approval permission for specific pipelines and approval actions](https://docs.aws.amazon.com/codepipeline/latest/userguide/approvals-iam-permissions.html#approvals-iam-permissions-limited).
@@ -144,11 +150,7 @@ Checkov skips can be used where Checkov policies conflict with your organization
 
 ## Related Resources
 
-- [AWS CodePipeline User Guide](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
-- [Resource: aws_codecommit_repository](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codecommit_repository)
-- [Resource: aws_codebuild_project](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codebuild_project)
-- [Resource: aws_codepipeline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codepipeline)
-
+- [terraform-multi-account-pipeline](https://github.com/aws-samples/terraform-multi-account-pipeline) 
 
 ## Security
 

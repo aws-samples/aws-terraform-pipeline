@@ -90,7 +90,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_validate" {
 
 resource "aws_iam_role_policy_attachment" "codebuild_execution" {
   role       = aws_iam_role.codebuild_execution.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  policy_arn = var.codebuild_policy == null ? "arn:aws:iam::aws:policy/AdministratorAccess" : var.codebuild_policy
 }
 
 resource "aws_iam_policy" "codebuild_validate" {

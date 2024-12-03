@@ -51,3 +51,7 @@ variable "detect_changes" {
   default = false
 }
 
+variable "codebuild_policy" {
+  type    = string
+  default = null
+}
