@@ -4,7 +4,7 @@ phases:
 
   install:
     runtime-versions:
-       python: latest
+       python: 3.12
     commands:
       - cd /usr/bin
       - yum install -y yum-utils
