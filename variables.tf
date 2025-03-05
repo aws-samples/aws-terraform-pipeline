@@ -18,7 +18,6 @@ variable "environment_variables" {
   description = "environment variables for codebuild"
   type        = map(string)
   default = {
-    TF_VERSION     = "1.5.7"
     TFLINT_VERSION = "0.33.0"
   }
 }
@@ -59,4 +58,10 @@ variable "codebuild_policy" {
 variable "terraform_version" {
   type    = string
   default = "latest"
+}
+
+variable "artifact_retention" {
+  description = "s3 artifact bucket retention, in days"
+  type        = number
+  default     = 90
 }
