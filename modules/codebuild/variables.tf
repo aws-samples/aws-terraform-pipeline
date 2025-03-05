@@ -25,3 +25,7 @@ variable "codebuild_role" {
 variable "log_group" {
   type = string
 }
+
+variable "image" {
+  type = string
+}

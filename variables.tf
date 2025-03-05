@@ -55,3 +55,8 @@ variable "codebuild_policy" {
   type    = string
   default = null
 }
+
+variable "terraform_version" {
+  type    = string
+  default = "latest"
+}

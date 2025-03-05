@@ -10,6 +10,7 @@ module "validation" {
   build_timeout         = 5
   build_spec            = "${each.key}.yml"
   log_group             = local.log_group
+  image                 = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
 }
 
 module "plan" {
@@ -20,6 +21,7 @@ module "plan" {
   build_timeout         = 10
   build_spec            = "plan.yml"
   log_group             = local.log_group
+  image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
 module "apply" {
@@ -30,6 +32,7 @@ module "apply" {
   build_timeout         = 10
   build_spec            = "apply.yml"
   log_group             = local.log_group
+  image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
 resource "aws_iam_role" "codebuild_validate" {
