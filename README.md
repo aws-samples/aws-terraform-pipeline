@@ -76,19 +76,19 @@ module "pipeline" {
   ]
 }
 ```
-`branch` is the CodeCommit branch. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
+`branch` is the branch to source. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
 
 `detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo.  
 
 `kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`.
 
-`access_logging_bucket` can be used to send S3 server access logs to your existing access logging bucket.
+`access_logging_bucket` S3 server access logs bucket ARN, enables server access logging on the S3 artifact bucket.
 
 `artifact_retention` controls the S3 artifact bucket retention period. It defaults to 90 (days). 
 
 `codebuild_policy` replaces the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy. This can be used if you want to scope the permissions of the pipeline. 
 
-`build_timeout` is the codebuild project build timeout. It defaults to 10 (minutes). 
+`build_timeout` is the CodeBuild project build timeout. It defaults to 10 (minutes). 
 
 `terraform_version` controls the terraform version (which image will be used from [hashicorp/terraform](https://hub.docker.com/r/hashicorp/terraform/tags)). 
 

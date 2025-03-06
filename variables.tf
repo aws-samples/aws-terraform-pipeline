@@ -2,17 +2,62 @@
 // SPDX-License-Identifier: MIT-0
 
 variable "pipeline_name" {
-  description = "value"
-  type        = string
-}
-
-variable "repo" {
   type = string
 }
 
+variable "repo" {
+  description = "source repo name"
+  type        = string
+}
+
+// optional
+
+variable "access_logging_bucket" {
+  description = "s3 server access logging bucket arn"
+  type        = string
+  default     = null
+}
+
+variable "artifact_retention" {
+  description = "s3 artifact bucket retention, in days"
+  type        = number
+  default     = 90
+}
+
 variable "branch" {
-  type    = string
-  default = "main"
+  description = "branch to source"
+  type        = string
+  default     = "main"
+}
+
+variable "build_timeout" {
+  description = "CodeBuild project build timeout"
+  type        = number
+  default     = 10
+}
+
+variable "checkov_skip" {
+  description = "list of checkov checks to skip"
+  type        = list(string)
+  default     = [""]
+}
+
+variable "codebuild_policy" {
+  description = "replaces CodeBuild's AWSAdministratorAccess IAM policy"
+  type        = string
+  default     = null
+}
+
+variable "connection" {
+  description = "arn of the CodeConnection"
+  type        = string
+  default     = null
+}
+
+variable "detect_changes" {
+  description = "allows third-party servicesm like GitHubm to invoke the pipeline"
+  type        = string
+  default     = false
 }
 
 variable "environment_variables" {
@@ -23,51 +68,13 @@ variable "environment_variables" {
   }
 }
 
-variable "checkov_skip" {
-  description = "list of checkov checks to skip"
-  type        = list(string)
-  default     = [""]
-}
-
 variable "kms_key" {
-  description = "kms key to be used"
+  description = "AWS KMS key ARN"
   type        = string
   default     = null
-}
-
-variable "access_logging_bucket" {
-  description = "s3 server access logging bucket"
-  type        = string
-  default     = null
-}
-
-variable "connection" {
-  type    = string
-  default = null
-}
-
-variable "detect_changes" {
-  type    = string
-  default = false
-}
-
-variable "codebuild_policy" {
-  type    = string
-  default = null
 }
 
 variable "terraform_version" {
   type    = string
   default = "latest"
-}
-
-variable "artifact_retention" {
-  description = "s3 artifact bucket retention, in days"
-  type        = number
-  default     = 90
-}
-
-variable "build_timeout" {
-  type    = number
-  default = 10
 }
