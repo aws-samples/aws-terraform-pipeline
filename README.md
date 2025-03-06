@@ -62,10 +62,12 @@ module "pipeline" {
   detect_changes        = true
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
-  codebuild_policy      = aws_iam_policy.this.arn 
+  artifact_retention    = 90
 
+  codebuild_policy  = aws_iam_policy.this.arn
+  build_timeout     = 10
+  terraform_version = "1.5.7"
   environment_variables = {
-    TF_VERSION     = "1.5.7"
     TFLINT_VERSION = "0.33.0"
   }
 
@@ -83,9 +85,15 @@ module "pipeline" {
 
 `access_logging_bucket` can be used to send S3 server access logs to your existing access logging bucket.
 
+`artifact_retention` controls the S3 artifact bucket retention period. It defaults to 90 (days). 
+
 `codebuild_policy` replaces the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy. This can be used if you want to scope the permissions of the pipeline. 
 
-`environment_variables` can be used to define terraform and [tf_lint](https://github.com/terraform-linters/tflint) versions. 
+`build_timeout` is the codebuild project build timeout. It defaults to 10 (minutes). 
+
+`terraform_version` controls the terraform version (which image will be used from [hashicorp/terraform](https://hub.docker.com/r/hashicorp/terraform/tags)). 
+
+`environment_variables`  defines Codebuild environment variables, such as the [tf_lint](https://github.com/terraform-linters/tflint) version. 
 
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 

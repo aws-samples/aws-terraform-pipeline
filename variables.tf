@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: MIT-0
 
 variable "pipeline_name" {
-  type = string
+  description = "value"
+  type        = string
 }
 
 variable "repo" {
@@ -64,4 +65,9 @@ variable "artifact_retention" {
   description = "s3 artifact bucket retention, in days"
   type        = number
   default     = 90
+}
+
+variable "build_timeout" {
+  type    = number
+  default = 10
 }
