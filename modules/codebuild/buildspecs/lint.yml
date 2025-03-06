@@ -1,19 +1,6 @@
 version: 0.2
 
 phases:
-
-  install:
-    commands:
-      - cd /usr/bin
-      - yum install -y yum-utils
-      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-      - yum install -y terraform
-      - curl --location https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip --output tflint_linux_amd64.zip
-      - curl --location https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/checksums.txt --output checksums.txt
-      - file=$(sha256sum tflint_linux_amd64.zip | cut -d" " -f1)
-      - sha=$(grep $file checksums.txt | cut -d" " -f1)
-      - if [ "${file}" = "${sha}" ]; then unzip -o tflint_linux_amd64.zip ; else exit 1 ; fi
-
   build:
     commands:   
       - cd "$CODEBUILD_SRC_DIR"
