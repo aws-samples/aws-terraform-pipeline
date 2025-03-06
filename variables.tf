@@ -42,6 +42,11 @@ variable "checkov_skip" {
   default     = [""]
 }
 
+variable "checkov_version" {
+  type    = string
+  default = "latest"
+}
+
 variable "codebuild_policy" {
   description = "replaces CodeBuild's AWSAdministratorAccess IAM policy"
   type        = string
@@ -55,17 +60,9 @@ variable "connection" {
 }
 
 variable "detect_changes" {
-  description = "allows third-party servicesm like GitHubm to invoke the pipeline"
+  description = "allows third-party servicesm like GitHub to invoke the pipeline"
   type        = string
   default     = false
-}
-
-variable "environment_variables" {
-  description = "environment variables for codebuild"
-  type        = map(string)
-  default = {
-    TFLINT_VERSION = "0.33.0"
-  }
 }
 
 variable "kms_key" {
@@ -77,4 +74,9 @@ variable "kms_key" {
 variable "terraform_version" {
   type    = string
   default = "latest"
+}
+
+variable "tflint_version" {
+  type    = string
+  default = "0.33.0"
 }

@@ -6,18 +6,18 @@ module "validation" {
   source                = "./modules/codebuild"
   codebuild_name        = "${var.pipeline_name}-${each.key}"
   codebuild_role        = aws_iam_role.codebuild_validate.arn
-  environment_variables = each.value
+  environment_variables = each.value.env_var
   build_timeout         = var.build_timeout
   build_spec            = "${each.key}.yml"
   log_group             = local.log_group
-  image                 = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
+  image                 = each.value.image
 }
 
 module "plan" {
   source                = "./modules/codebuild"
   codebuild_name        = "${var.pipeline_name}-plan"
   codebuild_role        = aws_iam_role.codebuild_execution.arn
-  environment_variables = var.environment_variables
+  environment_variables = null
   build_timeout         = var.build_timeout
   build_spec            = "plan.yml"
   log_group             = local.log_group
@@ -28,7 +28,7 @@ module "apply" {
   source                = "./modules/codebuild"
   codebuild_name        = "${var.pipeline_name}-apply"
   codebuild_role        = aws_iam_role.codebuild_execution.arn
-  environment_variables = var.environment_variables
+  environment_variables = null
   build_timeout         = var.build_timeout
   build_spec            = "apply.yml"
   log_group             = local.log_group

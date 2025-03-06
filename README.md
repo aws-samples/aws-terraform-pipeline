@@ -64,12 +64,12 @@ module "pipeline" {
   access_logging_bucket = aws_s3_bucket.this.id
   artifact_retention    = 90
 
-  codebuild_policy      = aws_iam_policy.this.arn
-  build_timeout         = 10
-  terraform_version     = "1.5.7"
-  environment_variables = {
-    TFLINT_VERSION = "0.33.0"
-  }
+  codebuild_policy  = aws_iam_policy.this.arn
+  build_timeout     = 10
+  terraform_version = "1.5.7"
+  checkov_version   = "3.2.0"
+  tflint_version    = "0.33.0"
+  
 
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
@@ -90,9 +90,12 @@ module "pipeline" {
 
 `build_timeout` is the CodeBuild project build timeout. It defaults to 10 (minutes). 
 
-`terraform_version` controls the terraform version (which image will be used from [hashicorp/terraform](https://hub.docker.com/r/hashicorp/terraform/tags)). 
+`terraform_version` controls the terraform version. It defaults to latest.
 
-`environment_variables`  defines Codebuild environment variables, such as the [tf_lint](https://github.com/terraform-linters/tflint) version. 
+`checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
+[TFLint](https://github.com/terraform-linters/tflint)
+
+`tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.33.0.
 
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 
