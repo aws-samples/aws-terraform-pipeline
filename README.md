@@ -64,9 +64,9 @@ module "pipeline" {
   access_logging_bucket = aws_s3_bucket.this.id
   artifact_retention    = 90
 
-  codebuild_policy  = aws_iam_policy.this.arn
-  build_timeout     = 10
-  terraform_version = "1.5.7"
+  codebuild_policy      = aws_iam_policy.this.arn
+  build_timeout         = 10
+  terraform_version     = "1.5.7"
   environment_variables = {
     TFLINT_VERSION = "0.33.0"
   }
@@ -74,7 +74,6 @@ module "pipeline" {
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
   ]
-
 }
 ```
 `branch` is the CodeCommit branch. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
