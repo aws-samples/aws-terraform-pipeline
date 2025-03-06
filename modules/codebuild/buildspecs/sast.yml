@@ -11,6 +11,8 @@ phases:
           checkov --directory ./ --skip-path ./deploy --skip-check ${CHECKOV_SKIPS} -o junitxml > checkov.xml
         fi
 
+      - cat checkov.xml
+
   post_build:
     commands:
       - echo "checkov complete, see report for details"
