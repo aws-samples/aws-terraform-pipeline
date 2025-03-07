@@ -17,11 +17,11 @@ This module must be deployed to a separate repository to the code you want to pu
 
 ```
 your repo
+   modules
    backend.tf 
    main.tf
    provider.tf
    variables.tf    
-   etc
 
 pipeline repo 
    main.tf <--module deployed here
