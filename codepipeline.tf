@@ -121,6 +121,14 @@ data "aws_iam_policy_document" "codepipeline-assume-role" {
       type        = "Service"
       identifiers = ["codepipeline.amazonaws.com"]
     }
+
+    condition {
+      test     = "StringLike"
+      variable = "aws:SourceArn"
+      values = [
+        "arn:aws:codepipeline:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.pipeline_name}"
+      ]
+    }
   }
 }
 

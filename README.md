@@ -94,7 +94,6 @@ module "pipeline" {
 `terraform_version` controls the terraform version. It defaults to latest.
 
 `checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
-[TFLint](https://github.com/terraform-linters/tflint)
 
 `tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.33.0.
 
