@@ -16,11 +16,12 @@ Deploy terraform with terraform.
 This module must be deployed to a separate repository to the code you want to push through it.
 
 ```
-your repo
+your existing repo
    backend.tf 
    main.tf
    provider.tf
    variables.tf    
+   etc
 
 pipeline repo 
    main.tf <--module deployed here
