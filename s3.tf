@@ -60,9 +60,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 
   rule {
     status = "Enabled"
-    id     = "90-days"
+    id     = "${var.artifact_retention}-days"
     expiration {
-      days = 90
+      days = var.artifact_retention
     }
 
   }

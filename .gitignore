@@ -1,6 +1,10 @@
 **/.terraform/*
 *.tfstate
 *.tfstate.*
-.DS_Store
 .terraform.lock.hcl
 
+*.test
+**/test/*
+todo.md
+
+.DS_Store

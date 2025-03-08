@@ -6,21 +6,34 @@ variable "pipeline_name" {
 }
 
 variable "repo" {
-  type = string
+  description = "source repo name"
+  type        = string
+}
+
+// optional
+
+variable "access_logging_bucket" {
+  description = "s3 server access logging bucket arn"
+  type        = string
+  default     = null
+}
+
+variable "artifact_retention" {
+  description = "s3 artifact bucket retention, in days"
+  type        = number
+  default     = 90
 }
 
 variable "branch" {
-  type    = string
-  default = "main"
+  description = "branch to source"
+  type        = string
+  default     = "main"
 }
 
-variable "environment_variables" {
-  description = "environment variables for codebuild"
-  type        = map(string)
-  default = {
-    TF_VERSION     = "1.5.7"
-    TFLINT_VERSION = "0.33.0"
-  }
+variable "build_timeout" {
+  description = "CodeBuild project build timeout"
+  type        = number
+  default     = 10
 }
 
 variable "checkov_skip" {
@@ -29,29 +42,41 @@ variable "checkov_skip" {
   default     = [""]
 }
 
-variable "kms_key" {
-  description = "kms key to be used"
-  type        = string
-  default     = null
+variable "checkov_version" {
+  type    = string
+  default = "latest"
 }
 
-variable "access_logging_bucket" {
-  description = "s3 server access logging bucket"
+variable "codebuild_policy" {
+  description = "replaces CodeBuild's AWSAdministratorAccess IAM policy"
   type        = string
   default     = null
 }
 
 variable "connection" {
-  type    = string
-  default = null
+  description = "arn of the CodeConnection"
+  type        = string
+  default     = null
 }
 
 variable "detect_changes" {
-  type    = string
-  default = false
+  description = "allows third-party servicesm like GitHub to invoke the pipeline"
+  type        = string
+  default     = false
 }
 
-variable "codebuild_policy" {
+variable "kms_key" {
+  description = "AWS KMS key ARN"
+  type        = string
+  default     = null
+}
+
+variable "terraform_version" {
   type    = string
-  default = null
+  default = "latest"
+}
+
+variable "tflint_version" {
+  type    = string
+  default = "0.33.0"
 }

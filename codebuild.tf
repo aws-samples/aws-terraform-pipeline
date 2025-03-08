@@ -6,30 +6,33 @@ module "validation" {
   source                = "./modules/codebuild"
   codebuild_name        = "${var.pipeline_name}-${each.key}"
   codebuild_role        = aws_iam_role.codebuild_validate.arn
-  environment_variables = each.value
-  build_timeout         = 5
+  environment_variables = local.env_var
+  build_timeout         = var.build_timeout
   build_spec            = "${each.key}.yml"
   log_group             = local.log_group
+  image                 = each.value
 }
 
 module "plan" {
   source                = "./modules/codebuild"
   codebuild_name        = "${var.pipeline_name}-plan"
   codebuild_role        = aws_iam_role.codebuild_execution.arn
-  environment_variables = var.environment_variables
-  build_timeout         = 10
+  environment_variables = local.env_var
+  build_timeout         = var.build_timeout
   build_spec            = "plan.yml"
   log_group             = local.log_group
+  image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
 module "apply" {
   source                = "./modules/codebuild"
   codebuild_name        = "${var.pipeline_name}-apply"
   codebuild_role        = aws_iam_role.codebuild_execution.arn
-  environment_variables = var.environment_variables
-  build_timeout         = 10
+  environment_variables = local.env_var
+  build_timeout         = var.build_timeout
   build_spec            = "apply.yml"
   log_group             = local.log_group
+  image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
 resource "aws_iam_role" "codebuild_validate" {
