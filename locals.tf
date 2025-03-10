@@ -7,6 +7,7 @@ locals {
     fmt      = "hashicorp/terraform:${var.terraform_version}"
     lint     = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
     sast     = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
+    tags     = "jakebark/tag-nag:${var.tagnag_version}"
   }
 
   conditional_validation_stages = {
@@ -19,5 +20,6 @@ locals {
     CHECKOV_SKIPS   = join(",", "${var.checkov_skip}")
     TAGNAG_TAGS     = var.tags
     TF_VERSION      = var.terraform_version
+    TAGNAG_TAGS     = var.tags
   }
 }
