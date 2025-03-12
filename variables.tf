@@ -71,6 +71,17 @@ variable "kms_key" {
   default     = null
 }
 
+variable "tags" {
+  description = "tags to check for"
+  type        = string
+  default     = null
+}
+
+variable "tagnag_version" {
+  type    = string
+  default = "latest"
+}
+
 variable "terraform_version" {
   type    = string
   default = "latest"
