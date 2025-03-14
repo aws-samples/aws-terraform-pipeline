@@ -74,7 +74,7 @@ variable "kms_key" {
 variable "tags" {
   description = "tags to check for"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "tagnag_version" {
