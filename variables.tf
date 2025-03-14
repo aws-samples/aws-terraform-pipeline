@@ -47,6 +47,12 @@ variable "checkov_version" {
   default = "latest"
 }
 
+variable "cloudwatch_retention" {
+  description = "CloudWatch log group retention, in days"
+  type        = number
+  default     = 90
+}
+
 variable "codebuild_policy" {
   description = "replaces CodeBuild's AWSAdministratorAccess IAM policy"
   type        = string
