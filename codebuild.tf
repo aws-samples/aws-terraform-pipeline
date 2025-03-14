@@ -9,7 +9,7 @@ module "validation" {
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
   build_spec            = "${each.key}.yml"
-  log_group             = local.log_group
+  log_group             = aws_cloudwatch_log_group.this.name
   image                 = each.value
 }
 
@@ -20,7 +20,7 @@ module "plan" {
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
   build_spec            = "plan.yml"
-  log_group             = local.log_group
+  log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
@@ -31,7 +31,7 @@ module "apply" {
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
   build_spec            = "apply.yml"
-  log_group             = local.log_group
+  log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
@@ -170,4 +170,10 @@ resource "aws_codebuild_report_group" "sast" {
       path                = "/sast"
     }
   }
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  name              = "/aws/${var.pipeline_name}"
+  retention_in_days = 30
+  kms_key_id        = var.kms_key
 }
