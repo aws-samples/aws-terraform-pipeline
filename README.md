@@ -82,7 +82,9 @@ module "pipeline" {
 
 `detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo.  
 
-`kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`.
+`kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket and CloudWatch log group with a AWS KMS key of your choice.  Your AWS KMS key policy will need to:
+- allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`
+- follow [CloudWatch Logs guidance for AWS KMS](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html) 
 
 `access_logging_bucket` S3 server access logs bucket ARN, enables server access logging on the S3 artifact bucket.
 
