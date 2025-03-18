@@ -79,7 +79,7 @@ variable "kms_key" {
 
 variable "terraform_version" {
   type    = string
-  default = "latest"
+  default = "1.5.7"
 }
 
 variable "tflint_version" {
