@@ -33,4 +33,3 @@ reports:
       - checkov.xml
     base-directory: ./
     file-format: JUNITXML
-      
