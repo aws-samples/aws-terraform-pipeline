@@ -70,7 +70,7 @@ module "pipeline" {
   build_timeout     = 10
   terraform_version = "1.5.7"
   checkov_version   = "3.2.0"
-  tflint_version    = "0.33.0"
+  tflint_version    = "0.48.0"
   
 
   checkov_skip = [
@@ -96,11 +96,11 @@ module "pipeline" {
 
 `build_timeout` is the CodeBuild project build timeout. It defaults to 10 (minutes). 
 
-`terraform_version` controls the terraform version. It defaults to latest.
+`terraform_version` controls the terraform version. It defaults to 1.5.7.
 
 `checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
 
-`tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.33.0.
+`tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.48.0.
 
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 
