@@ -78,5 +78,5 @@ variable "terraform_version" {
 
 variable "tflint_version" {
   type    = string
-  default = "0.33.0"
+  default = "0.48.0"
 }
