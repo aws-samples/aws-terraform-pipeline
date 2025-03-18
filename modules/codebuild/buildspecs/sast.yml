@@ -9,7 +9,7 @@ phases:
       - cd /usr/bin
       - yum install -y yum-utils
       - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-      - yum install -y terraform
+      - yum install -y terraform-${TF_VERSION}
       - python -V
       - pip3 install checkov
 
