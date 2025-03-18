@@ -15,5 +15,6 @@ locals {
     TFLINT_VERSION  = var.tflint_version
     SAST_REPORT_ARN = aws_codebuild_report_group.sast.arn
     CHECKOV_SKIPS   = join(",", "${var.checkov_skip}")
+    TF_VERSION      = "1.5.7"
   }
 }
