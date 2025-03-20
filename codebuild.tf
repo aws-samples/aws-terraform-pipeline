@@ -172,7 +172,7 @@ resource "aws_codebuild_report_group" "sast" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  name              = "/aws/${var.pipeline_name}"
+  name              = "/aws/codebuild/${var.pipeline_name}"
   retention_in_days = var.log_retention
   kms_key_id        = var.kms_key
 }
