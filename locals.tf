@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: MIT-0
 
 locals {
-  log_group = "/aws/${var.pipeline_name}"
-
   validation_stages = {
     validate = "hashicorp/terraform:${var.terraform_version}"
     fmt      = "hashicorp/terraform:${var.terraform_version}"
