@@ -34,7 +34,8 @@ Segregation enables the pipeline to run commands against the code in "your repo"
 AWS Codecommit:
 ```hcl
 module "pipeline" {
-  source        = "github.com/aws-samples/terraform-aws-pipeline"
+  source        = "aws-samples/pipeline/aws"
+  version       = "2.1.2"
   pipeline_name = "pipeline-name"
   repo          = "codecommit-repo-name"
 }
@@ -42,7 +43,8 @@ module "pipeline" {
 Third-party service:
 ```hcl
 module "pipeline" {
-  source        = "github.com/aws-samples/terraform-aws-pipeline"
+  source        = "aws-samples/pipeline/aws"
+  version       = "2.1.2"
   pipeline_name = "pipeline-name"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
