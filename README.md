@@ -66,6 +66,7 @@ module "pipeline" {
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
   artifact_retention    = 90
+  log_retention         = 90
 
   codebuild_policy  = aws_iam_policy.this.arn
   build_timeout     = 10
@@ -88,6 +89,8 @@ module "pipeline" {
 `access_logging_bucket` S3 server access logs bucket ARN, enables server access logging on the S3 artifact bucket.
 
 `artifact_retention` controls the S3 artifact bucket retention period. It defaults to 90 (days). 
+
+`log_retention` controls the CloudWatch log group retention period. It defaults to 90 (days). 
 
 `codebuild_policy` replaces the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy. This can be used if you want to scope the permissions of the pipeline. 
 
