@@ -65,6 +65,12 @@ variable "detect_changes" {
   default     = false
 }
 
+variable "log_retention" {
+  description = "CloudWatch log group retention, in days"
+  type        = number
+  default     = 90
+}
+
 variable "kms_key" {
   description = "AWS KMS key ARN"
   type        = string
