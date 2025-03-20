@@ -1,4 +1,4 @@
-# terraform-pipeline
+# terraform-aws-pipeline
  
 Deploy terraform with terraform. 
 
@@ -34,7 +34,7 @@ Segregation enables the pipeline to run commands against the code in "your repo"
 AWS Codecommit:
 ```hcl
 module "pipeline" {
-  source        = "github.com/aws-samples/aws-terraform-pipeline"
+  source        = "github.com/aws-samples/terraform-aws-pipeline"
   pipeline_name = "pipeline-name"
   repo          = "codecommit-repo-name"
 }
@@ -42,7 +42,7 @@ module "pipeline" {
 Third-party service:
 ```hcl
 module "pipeline" {
-  source        = "github.com/aws-samples/aws-terraform-pipeline"
+  source        = "github.com/aws-samples/terraform-aws-pipeline"
   pipeline_name = "pipeline-name"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
@@ -165,7 +165,8 @@ Checkov skips can be used where Checkov policies conflict with your organization
 
 ## Related Resources
 
-- [terraform-multi-account-pipeline](https://github.com/aws-samples/terraform-multi-account-pipeline) 
+- [terraform-multi-account-pipeline](https://github.com/aws-samples/terraform-multi-account-pipeline)
+- [Terraform Registry](https://registry.terraform.io/modules/aws-samples/pipeline/aws/latest)
 
 ## Security
 
