@@ -9,12 +9,7 @@ locals {
     sast     = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
   }
 
-  conditional_validation_stages = concat(
-    local.validation_stages,
-    {
-      tags = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
-    }
-  )
+  conditional_validation_stages = merge(local.validation_stages, { tags = "aws/codebuild/amazonlinux2-x86_64-standard:5.0" })
 
   env_var = {
     TFLINT_VERSION  = var.tflint_version
