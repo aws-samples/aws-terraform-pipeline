@@ -6,7 +6,7 @@ module "validation" {
   source                = "./modules/codebuild"
   codebuild_name        = "${var.pipeline_name}-${each.key}"
   codebuild_role        = aws_iam_role.codebuild_validate.arn
-  environment_variables = local.env_var
+  environment_variables = var.tags == "" ? local.env_var : local.conditional_env_var
   build_timeout         = var.build_timeout
   build_spec            = "${each.key}.yml"
   log_group             = aws_cloudwatch_log_group.this.name
