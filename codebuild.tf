@@ -9,7 +9,7 @@ module "validation" {
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
   build_spec            = "${each.key}.yml"
-  log_group             = local.log_group
+  log_group             = aws_cloudwatch_log_group.this.name
   image                 = each.value
 }
 
@@ -20,7 +20,7 @@ module "plan" {
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
   build_spec            = "plan.yml"
-  log_group             = local.log_group
+  log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
@@ -31,7 +31,7 @@ module "apply" {
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
   build_spec            = "apply.yml"
-  log_group             = local.log_group
+  log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
@@ -111,8 +111,7 @@ data "aws_iam_policy_document" "codebuild" {
     ]
 
     resources = [
-      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${local.log_group}",
-      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${local.log_group}:*"
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"
     ]
   }
 
@@ -165,9 +164,15 @@ resource "aws_codebuild_report_group" "sast" {
     s3_destination {
       bucket              = aws_s3_bucket.this.id
       encryption_disabled = false
-      encryption_key      = try(var.kms_key, data.aws_kms_key.s3.arn)
+      encryption_key      = var.kms_key == null ? data.aws_kms_key.s3.arn : var.kms_key
       packaging           = "NONE"
       path                = "/sast"
     }
   }
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  name              = "/aws/codebuild/${var.pipeline_name}"
+  retention_in_days = var.log_retention
+  kms_key_id        = var.kms_key
 }
