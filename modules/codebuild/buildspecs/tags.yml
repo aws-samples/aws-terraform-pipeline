@@ -12,8 +12,4 @@ phases:
   build:
     commands:
       - cd "$CODEBUILD_SRC_DIR"
-      - tag-nag . --tags $TAGS -d
-
-  post_build:
-    commands:
-      - echo "apply complete"
+      - tag-nag . --tags $TAGS

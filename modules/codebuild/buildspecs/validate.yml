@@ -6,7 +6,3 @@ phases:
       - cd "$CODEBUILD_SRC_DIR"
       - terraform init -backend=false
       - terraform validate
-
-  post_build:
-    commands:
-      - echo "validate complete"

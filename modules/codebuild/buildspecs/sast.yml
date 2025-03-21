@@ -23,10 +23,6 @@ phases:
           checkov --directory ./ --skip-path ./deploy --skip-check ${CHECKOV_SKIPS} -o junitxml > checkov.xml
         fi
 
-  post_build:
-    commands:
-      - echo "checkov complete, see report for details"
-
 reports:
   ${SAST_REPORT_ARN}:
     files:
