@@ -164,7 +164,7 @@ resource "aws_codebuild_report_group" "sast" {
     s3_destination {
       bucket              = aws_s3_bucket.this.id
       encryption_disabled = false
-      encryption_key      = try(var.kms_key, data.aws_kms_key.s3.arn)
+      encryption_key      = var.kms_key == null ? data.aws_kms_key.s3.arn : var.kms_key
       packaging           = "NONE"
       path                = "/sast"
     }
