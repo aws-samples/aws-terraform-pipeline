@@ -74,6 +74,11 @@ module "pipeline" {
   checkov_version   = "3.2.0"
   tflint_version    = "0.48.0"
   
+  tags = join(",", [
+    "Environment=Dev",
+    "Source"
+  ])
+  tagnag_version = "0.5.4"
 
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
@@ -102,6 +107,10 @@ module "pipeline" {
 
 `tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.48.0.
 
+`tags` enables tag validation with [tag-nag](https://github.com/jakebark/tag-nag). Input a list of tag keys and/or tag keys and values to enforce. Input must be passed as a string, see [commands](https://github.com/jakebark/tag-nag?tab=readme-ov-file#commands). 
+
+`tagnag_version` controls the [tag-nag](https://github.com/jakebark/tag-nag) version. It defaults to 0.5.4.
+
 `checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
 
 
@@ -111,7 +120,7 @@ module "pipeline" {
 
 1. User commits to existing repository. 
 2. The commit invokes an Amazon EventBridge rule, which runs the AWS CodePipeline pipeline.
-3. The pipeline validates the code, then runs a `terraform plan`, before waiting for manual approval. Once this is issued, the resources are built with a `terraform apply`. 
+3. The pipeline validates the code, then runs a `terraform plan`, before waiting for manual approval. Once this is issued, the resources are built with a `terraform apply` (either within the same account or another AWS account, depending on how your code is configured).  
 4. Pipeline artifacts are sent to an Amazon S3 bucket. Pipeline activity is logged in Amazon CloudWatch logs. 
 
 #### Pipeline Validation
@@ -119,10 +128,10 @@ module "pipeline" {
 | Check | Description |
 |---|---|
 | validate | runs `terraform validate` to make sure that the code is syntactically valid. |
-| lint | runs [TFLint](https://github.com/terraform-linters/tflint) which will find errors, depreciated syntax, and check naming conventions. |
+| lint | runs [tfLint](https://github.com/terraform-linters/tflint) which will find errors, depreciated syntax, and check naming conventions. |
 | fmt | runs `terraform fmt --recursive --check` to ensure code is consistently formatted. |
-| SAST | runs [Checkov](https://www.checkov.io/) for security best practices. |
-
+| sast | runs [checkov](https://www.checkov.io/) for security best practices. |
+| tags (optional)| runs [tag-nag](https://github.com/jakebark/tag-nag) to validate tags.|
 
 ## Setup a cross-account pipeline
 The pipeline can assume a cross-account role and deploy to another AWS account.
@@ -147,10 +156,9 @@ provider "aws" {
 |---|---|
 | Failed lint or validate | Read the report or logs to discover why the code has failed, then make a new commit. |
 | Failed fmt | This means your code is not formatted. Run `terraform fmt --recursive` on your code, then make a new commit. |
-| Failed SAST | Read the Checkov logs (Details > Reports) and either make the correction in code or add a skip to the module inputs. |
+| Failed SAST | Read the Checkov logs (click CodeBuild Project > Reports tab) and either make the correction in code or add a skip to the module inputs. |
 | Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit. |
 | Pipeline fails on apply with `the action failed because no branch named main was found ...` | Either nothing has been committed to the repo or the branch is incorrect (Eg using `Master` not `Main`). Either commit to the Main branch or change the module input to fix this. |
-| `Invalid count argument` for `aws_s3_bucket_server_side_encryption_configuration` | The AWS KMS key must exist before the pipeline is created. If you create both at the same time, there is a dependency issue. |
 
 ## Best Practices
 
