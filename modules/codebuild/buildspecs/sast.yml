@@ -21,7 +21,6 @@ phases:
         else
           checkov --directory ./ --skip-path ./deploy --skip-check ${CHECKOV_SKIPS} -o junitxml > checkov.xml
         fi
-
 reports:
   ${SAST_REPORT_ARN}:
     files:
