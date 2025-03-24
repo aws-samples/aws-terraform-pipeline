@@ -36,7 +36,7 @@ resource "aws_codepipeline" "this" {
     name = "Validation"
 
     dynamic "action" {
-      for_each = local.validation_stages
+      for_each = var.tags == "" ? local.validation_stages : local.conditional_validation_stages
       content {
         name            = action.key
         category        = "Test"

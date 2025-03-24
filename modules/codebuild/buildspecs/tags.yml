@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.23
+    commands:
+      - export PATH=$PATH:/usr/local/go/bin
+      - go install github.com/jakebark/tag-nag@v${TAGNAG_VERSION}
+
+  build:
+    commands:
+      - cd "$CODEBUILD_SRC_DIR"
+      - tag-nag . --tags $TAGS

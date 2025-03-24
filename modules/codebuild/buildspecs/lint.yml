@@ -1,7 +1,6 @@
 version: 0.2
 
 phases:
-
   install:
     commands:
       - cd /usr/bin
@@ -20,7 +19,3 @@ phases:
       - terraform init -backend=false
       - tflint --init
       - tflint
-
-  post_build:
-    commands:
-      - echo "lint complete"
