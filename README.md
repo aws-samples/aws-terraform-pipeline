@@ -174,7 +174,7 @@ Checkov skips can be used where Checkov policies conflict with your organization
 ## Related Resources
 
 - [terraform-multi-account-pipeline](https://github.com/aws-samples/terraform-multi-account-pipeline)
-- [Terraform Registry](https://registry.terraform.io/modules/aws-samples/pipeline/aws/latest)
+- [Terraform Registry: aws-samples/pipeline/aws](https://registry.terraform.io/modules/aws-samples/pipeline/aws/latest)
 
 ## Security
 
