@@ -85,7 +85,7 @@ variable "tags" {
 
 variable "tagnag_version" {
   type    = string
-  default = "0.5.3"
+  default = "0.5.5"
 }
 
 variable "terraform_version" {
