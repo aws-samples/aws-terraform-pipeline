@@ -34,7 +34,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Validation"
-
     dynamic "action" {
       for_each = var.tags == "" ? local.validation_stages : local.conditional_validation_stages
       content {
@@ -49,14 +48,11 @@ resource "aws_codepipeline" "this" {
           ProjectName = module.validation[action.key].codebuild_project.name
         }
       }
-
     }
-
   }
 
   stage {
     name = "Plan"
-
     action {
       name            = "Plan"
       category        = "Build"
@@ -84,7 +80,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Apply"
-
     action {
       name            = "Apply"
       category        = "Build"
@@ -99,7 +94,6 @@ resource "aws_codepipeline" "this" {
     }
   }
 }
-
 
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.pipeline_name}-role"
