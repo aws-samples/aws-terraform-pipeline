@@ -34,7 +34,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Validation"
-
     dynamic "action" {
       for_each = var.tags == "" ? local.validation_stages : local.conditional_validation_stages
       content {
@@ -49,14 +48,11 @@ resource "aws_codepipeline" "this" {
           ProjectName = module.validation[action.key].codebuild_project.name
         }
       }
-
     }
-
   }
 
   stage {
     name = "Plan"
-
     action {
       name            = "Plan"
       category        = "Build"
@@ -69,11 +65,6 @@ resource "aws_codepipeline" "this" {
         ProjectName = module.plan.codebuild_project.name
       }
     }
-  }
-
-  stage {
-    name = "Approve"
-
     action {
       name     = "Approval"
       category = "Approval"
@@ -82,15 +73,13 @@ resource "aws_codepipeline" "this" {
       version  = "1"
 
       configuration = {
-        CustomData         = "This action will approve the deployment of resources in ${var.pipeline_name}. Please ensure that you review the build logs of the plan stage before approving."
-        ExternalEntityLink = "https://${data.aws_region.current.name}.console.aws.amazon.com/codesuite/codebuild/${data.aws_caller_identity.current.account_id}/projects/${var.pipeline_name}-plan/"
+        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan stage before approving."
       }
     }
   }
 
   stage {
     name = "Apply"
-
     action {
       name            = "Apply"
       category        = "Build"
@@ -105,7 +94,6 @@ resource "aws_codepipeline" "this" {
     }
   }
 }
-
 
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.pipeline_name}-role"
