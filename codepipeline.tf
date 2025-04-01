@@ -5,7 +5,7 @@ resource "aws_codepipeline" "this" {
   name           = var.pipeline_name
   pipeline_type  = "V2"
   role_arn       = aws_iam_role.codepipeline_role.arn
-  execution_mode = "QUEUED"
+  execution_mode = var.mode
 
   artifact_store {
     location = aws_s3_bucket.this.id
@@ -34,7 +34,6 @@ resource "aws_codepipeline" "this" {
 
   stage {
     name = "Validation"
-
     dynamic "action" {
       for_each = var.tags == "" ? local.validation_stages : local.conditional_validation_stages
       content {
@@ -49,14 +48,11 @@ resource "aws_codepipeline" "this" {
           ProjectName = module.validation[action.key].codebuild_project.name
         }
       }
-
     }
-
   }
 
   stage {
     name = "Plan"
-
     action {
       name            = "Plan"
       category        = "Build"
@@ -64,33 +60,28 @@ resource "aws_codepipeline" "this" {
       provider        = "CodeBuild"
       input_artifacts = ["source_output"]
       version         = "1"
+      run_order       = 1
 
       configuration = {
         ProjectName = module.plan.codebuild_project.name
       }
     }
-  }
-
-  stage {
-    name = "Approve"
-
     action {
-      name     = "Approval"
-      category = "Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
+      name      = "Approval"
+      category  = "Approval"
+      owner     = "AWS"
+      provider  = "Manual"
+      version   = "1"
+      run_order = 2
 
       configuration = {
-        CustomData         = "This action will approve the deployment of resources in ${var.pipeline_name}. Please ensure that you review the build logs of the plan stage before approving."
-        ExternalEntityLink = "https://${data.aws_region.current.name}.console.aws.amazon.com/codesuite/codebuild/${data.aws_caller_identity.current.account_id}/projects/${var.pipeline_name}-plan/"
+        CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
       }
     }
   }
 
   stage {
     name = "Apply"
-
     action {
       name            = "Apply"
       category        = "Build"
@@ -105,7 +96,6 @@ resource "aws_codepipeline" "this" {
     }
   }
 }
-
 
 resource "aws_iam_role" "codepipeline_role" {
   name               = "${var.pipeline_name}-role"
