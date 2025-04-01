@@ -5,7 +5,7 @@ resource "aws_codepipeline" "this" {
   name           = var.pipeline_name
   pipeline_type  = "V2"
   role_arn       = aws_iam_role.codepipeline_role.arn
-  execution_mode = "QUEUED"
+  execution_mode = var.mode
 
   artifact_store {
     location = aws_s3_bucket.this.id
