@@ -62,6 +62,7 @@ module "pipeline" {
 module "pipeline" {
   ...
   branch                = "main"
+  mode                  = "SUPERSEDED"
   detect_changes        = true
   kms_key               = aws_kms_key.this.arn
   access_logging_bucket = aws_s3_bucket.this.id
@@ -85,7 +86,9 @@ module "pipeline" {
   ]
 }
 ```
-`branch` is the branch to source. It defaults to "main" and may need to be altered if you are using pre-commit hooks that default to "master". 
+`branch` is the branch to source. It defaults to `main`.
+
+`mode` is [pipeline execution mode](https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts-how-it-works.html#concepts-how-it-works-executions). It defaults to `SUPERSEDED`.
 
 `detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo.  
 
