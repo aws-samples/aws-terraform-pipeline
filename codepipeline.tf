@@ -60,17 +60,19 @@ resource "aws_codepipeline" "this" {
       provider        = "CodeBuild"
       input_artifacts = ["source_output"]
       version         = "1"
+      run_order       = 1
 
       configuration = {
         ProjectName = module.plan.codebuild_project.name
       }
     }
     action {
-      name     = "Approval"
-      category = "Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
+      name      = "Approval"
+      category  = "Approval"
+      owner     = "AWS"
+      provider  = "Manual"
+      version   = "1"
+      run_order = 2
 
       configuration = {
         CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan stage before approving."
