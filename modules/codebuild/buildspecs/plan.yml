@@ -3,7 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
-      - cd "$CODEBUILD_SRC_DIR"
       - git switch main
+      - cd "$CODEBUILD_SRC_DIR"
       - terraform init -no-color
       - terraform plan
