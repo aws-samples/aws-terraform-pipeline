@@ -61,7 +61,7 @@ variable "connection" {
 
 variable "detect_changes" {
   description = "allows third-party servicesm like GitHub to invoke the pipeline"
-  type        = string
+  type        = bool
   default     = false
 }
 
@@ -83,7 +83,6 @@ variable "mode" {
     ], var.mode)
     error_message = "unsupported pipeline mode"
   }
-
 }
 
 variable "kms_key" {
