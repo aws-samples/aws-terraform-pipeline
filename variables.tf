@@ -44,7 +44,7 @@ variable "checkov_skip" {
 
 variable "checkov_version" {
   type    = string
-  default = "latest"
+  default = "3.2.0"
 }
 
 variable "codebuild_policy" {
