@@ -75,7 +75,7 @@ module "pipeline" {
   tflint_version    = "0.48.0"
   
   tags = join(",", [
-    "Environment=Dev",
+    "Environment[Dev,Prod]",
     "Source"
   ])
   tagnag_version = "0.5.8"
