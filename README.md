@@ -8,8 +8,7 @@ Deploy terraform with terraform.
 
 ## Prerequisites
 - An existing AWS CodeCommit repository *OR* an [AWS CodeConnection connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html) to the third-party source and repo of your choice (GitHub, Gitlab, etc)
-- [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access (using the CodeBuild IAM role) 
-- (Optional) A cross-account IAM role in the target accounts, that can be assumed by the pipeline (using the CodeBuild IAM role) 
+- [Remote state](https://developer.hashicorp.com/terraform/language/state/remote) that the pipeline can access (using the CodeBuild IAM role)  
 
 ## Deployment
 
