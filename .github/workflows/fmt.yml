@@ -4,10 +4,9 @@ on:
   pull_request:
     branches: [ main ]
 
-
 jobs: 
   fmt: 
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
 
     steps: 
       - name: checkout code
