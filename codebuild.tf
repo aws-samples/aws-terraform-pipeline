@@ -35,17 +35,6 @@ module "apply" {
   image                 = "hashicorp/terraform:${var.terraform_version}"
 }
 
-module "branch_plan" {
-  source                = "./modules/codebuild"
-  codebuild_name        = "${var.pipeline_name}-apply"
-  codebuild_role        = aws_iam_role.codebuild_execution.arn
-  environment_variables = local.env_var
-  build_timeout         = var.build_timeout
-  build_spec            = "apply.yml"
-  log_group             = aws_cloudwatch_log_group.this.name
-  image                 = "hashicorp/terraform:${var.terraform_version}"
-}
-
 resource "aws_iam_role" "codebuild_validate" {
   name               = "${var.pipeline_name}-codebuild-validate"
   assume_role_policy = data.aws_iam_policy_document.codebuild_validate_assume.json
