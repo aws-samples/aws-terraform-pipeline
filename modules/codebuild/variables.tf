@@ -29,3 +29,7 @@ variable "log_group" {
 variable "image" {
   type = string
 }
+
+variable "vpc" {
+  type = map(any)
+}
