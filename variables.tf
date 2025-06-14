@@ -111,3 +111,8 @@ variable "tflint_version" {
   type    = string
   default = "0.48.0"
 }
+
+variable "vpc" {
+  type    = map(any)
+  default = null
+}

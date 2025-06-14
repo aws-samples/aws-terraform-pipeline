@@ -11,6 +11,7 @@ module "validation" {
   build_spec            = "${each.key}.yml"
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = each.value
+  vpc                   = var.vpc
 }
 
 module "plan" {
@@ -22,6 +23,7 @@ module "plan" {
   build_spec            = "plan.yml"
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
+  vpc                   = var.vpc
 }
 
 module "apply" {
@@ -33,6 +35,7 @@ module "apply" {
   build_spec            = "apply.yml"
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
+  vpc                   = var.vpc
 }
 
 resource "aws_iam_role" "codebuild_validate" {
