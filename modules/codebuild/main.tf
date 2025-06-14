@@ -22,7 +22,6 @@ resource "aws_codebuild_project" "this" {
         value = environment_variable.value
       }
     }
-
   }
 
   logs_config {
@@ -38,6 +37,15 @@ resource "aws_codebuild_project" "this" {
     git_clone_depth     = 0
     insecure_ssl        = false
     report_build_status = false
+  }
+
+  dynamic "vpc_config" {
+    for_each = var.vpc == null ? [] : [1]
+    content {
+      vpc_id             = vpc.value.vpc_id
+      subnets            = vpc.value.subnets
+      security_group_ids = vpc.security_group_ids
+    }
   }
 }
 
