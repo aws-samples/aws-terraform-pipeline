@@ -31,10 +31,10 @@ variable "image" {
 }
 
 variable "vpc" {
-  type = map(object({
+  type = object({
     vpc_id             = string
     subnets            = list(string)
     security_group_ids = list(string)
-  }))
+  })
   default = null
 }
