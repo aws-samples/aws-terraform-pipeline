@@ -154,6 +154,22 @@ data "aws_iam_policy_document" "codebuild" {
       "*"
     ]
   }
+
+  dynamic "statement" {
+    for_each = var.vpc == null ? [] : [var.vpc]
+    content {
+      effect = "Allow"
+      actions = [
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVpcs"
+      ]
+
+      resources = [
+        "*"
+      ]
+    }
+  }
 }
 
 resource "aws_codebuild_report_group" "sast" {
