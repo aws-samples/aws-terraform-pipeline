@@ -52,12 +52,10 @@ data "aws_iam_policy_document" "codebuild_validate_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
-
     principals {
       type        = "Service"
       identifiers = ["codebuild.amazonaws.com"]
     }
-
     condition {
       test     = "StringLike"
       variable = "aws:SourceArn"
@@ -72,12 +70,10 @@ data "aws_iam_policy_document" "codebuild_execution_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
-
     principals {
       type        = "Service"
       identifiers = ["codebuild.amazonaws.com"]
     }
-
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
@@ -112,7 +108,6 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-
     resources = [
       "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"
     ]
@@ -125,7 +120,6 @@ data "aws_iam_policy_document" "codebuild" {
       "codebuild:UpdateReport",
       "codebuild:BatchPutTestCases"
     ]
-
     resources = [
       aws_codebuild_report_group.sast.arn
     ]
@@ -137,7 +131,6 @@ data "aws_iam_policy_document" "codebuild" {
       "s3:GetObject",
       "s3:PutObject"
     ]
-
     resources = [
       "${aws_s3_bucket.this.arn}/*",
     ]
@@ -164,7 +157,6 @@ data "aws_iam_policy_document" "codebuild" {
         "ec2:DescribeSubnets",
         "ec2:DescribeVpcs"
       ]
-
       resources = [
         "*"
       ]
