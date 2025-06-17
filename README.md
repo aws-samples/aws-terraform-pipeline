@@ -73,6 +73,12 @@ module "pipeline" {
   terraform_version = "1.5.7"
   checkov_version   = "3.2.0"
   tflint_version    = "0.48.0"
+
+  vpc = {
+    vpc_id             = "vpc-011a22334455bb66c",
+    subnets            = ["subnet-011aabbcc2233d4ef"],
+    security_group_ids = ["sg-001abcd2233ee4455"],
+  }
   
   tags = join(",", [
     "Environment[Dev,Prod]",
@@ -108,6 +114,8 @@ module "pipeline" {
 `checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
 
 `tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.48.0.
+
+`vpc` configures the CodeBuild projects to [run in a VPC](https://docs.aws.amazon.com/codebuild/latest/userguide/vpc-support.html).  
 
 `tags` enables tag validation with [tag-nag](https://github.com/jakebark/tag-nag). Input a list of tag keys and/or tag keys and values to enforce. Input must be passed as a string, see [commands](https://github.com/jakebark/tag-nag?tab=readme-ov-file#commands). 
 
