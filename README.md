@@ -34,7 +34,7 @@ AWS Codecommit:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/pipeline/aws"
-  version       = "2.2.3"
+  version       = "2.2.x"
   pipeline_name = "pipeline-name"
   repo          = "codecommit-repo-name"
 }
