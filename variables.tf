@@ -111,3 +111,12 @@ variable "tflint_version" {
   type    = string
   default = "0.48.0"
 }
+
+variable "vpc" {
+  type = object({
+    vpc_id             = string
+    subnets            = list(string)
+    security_group_ids = list(string)
+  })
+  default = null
+}

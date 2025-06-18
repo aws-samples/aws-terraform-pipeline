@@ -29,3 +29,12 @@ variable "log_group" {
 variable "image" {
   type = string
 }
+
+variable "vpc" {
+  type = object({
+    vpc_id             = string
+    subnets            = list(string)
+    security_group_ids = list(string)
+  })
+  default = null
+}

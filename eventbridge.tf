@@ -47,12 +47,10 @@ data "aws_iam_policy_document" "eventbridge_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
-
     principals {
       type        = "Service"
       identifiers = ["events.amazonaws.com"]
     }
-
     condition {
       test     = "StringEquals"
       variable = "aws:SourceAccount"
@@ -79,7 +77,6 @@ data "aws_iam_policy_document" "eventbridge" {
     actions = [
       "codepipeline:StartPipelineExecution"
     ]
-
     resources = [
       aws_codepipeline.this.arn
     ]
