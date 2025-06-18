@@ -172,3 +172,15 @@ data "aws_iam_policy_document" "codepipeline" {
     ]
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "this" {
+  alarm_name          = "${var.pipeline_name}-pipeline-failure"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "PipelineExecutionFailure"
+  namespace           = "AWS/CodePipeline"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "Monitor pipeline failure for ${var.pipeline.name}"
+}
