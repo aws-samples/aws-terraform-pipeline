@@ -99,17 +99,17 @@ variable "tags" {
 
 variable "tagnag_version" {
   type    = string
-  default = "0.5.8"
+  default = "0.7.9"
 }
 
 variable "terraform_version" {
   type    = string
-  default = "1.5.7"
+  default = "1.7.0"
 }
 
 variable "tflint_version" {
   type    = string
-  default = "0.48.0"
+  default = "0.55.0"
 }
 
 variable "vpc" {
