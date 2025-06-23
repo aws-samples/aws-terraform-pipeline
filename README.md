@@ -70,9 +70,9 @@ module "pipeline" {
 
   codebuild_policy  = aws_iam_policy.this.arn
   build_timeout     = 10
-  terraform_version = "1.5.7"
+  terraform_version = "1.7.0"
   checkov_version   = "3.2.0"
-  tflint_version    = "0.48.0"
+  tflint_version    = "0.55.0"
 
   vpc = {
     vpc_id             = "vpc-011a22334455bb66c",
@@ -84,7 +84,7 @@ module "pipeline" {
     "Environment[Dev,Prod]",
     "Source"
   ])
-  tagnag_version = "0.5.8"
+  tagnag_version = "0.7.9"
 
   checkov_skip = [
     "CKV_AWS_144", #Ensure that S3 bucket has cross-region replication enabled
