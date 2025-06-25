@@ -74,21 +74,17 @@ variable "log_retention" {
 variable "notifications" {
   description = "SNS notification configuration"
   type = object({
-    enabled     = bool
+    sns_topic   = string
     events      = list(string)
     detail_type = string
-    sns_topic   = string
   })
   default = {
-    enabled = false
+    sns_topic = null
     events = [
       "codepipeline-pipeline-pipeline-execution-failed",
       "codepipeline-pipeline-pipeline-execution-succeeded"
     ]
-    detail_type       = "BASIC"
-    sns_topic         = null
-    sns_protocol      = null
-    sns_notifications = null
+    detail_type = "BASIC"
   }
 }
 
