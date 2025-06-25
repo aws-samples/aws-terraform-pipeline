@@ -71,6 +71,23 @@ variable "log_retention" {
   default     = 90
 }
 
+variable "notifications" {
+  description = "SNS notification configuration"
+  type = object({
+    sns_topic   = string
+    events      = list(string)
+    detail_type = string
+  })
+  default = {
+    sns_topic = null
+    events = [
+      "codepipeline-pipeline-pipeline-execution-failed",
+      "codepipeline-pipeline-pipeline-execution-succeeded"
+    ]
+    detail_type = "BASIC"
+  }
+}
+
 variable "mode" {
   description = "pipeline execution mode"
   type        = string
