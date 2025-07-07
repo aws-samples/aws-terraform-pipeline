@@ -1,4 +1,4 @@
-# Optional inputs
+# Optional Inputs
 
 `branch` is the branch to source. It defaults to `main`.
 
