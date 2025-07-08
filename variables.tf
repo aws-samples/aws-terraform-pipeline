@@ -125,7 +125,7 @@ variable "tflint_version" {
 variable "trigger" {
   type = object({
     push_branches = list(string)
-    pr_branches   = list(string)
+    pr_branches   = optional(list(string))
   })
   default = null
 }
