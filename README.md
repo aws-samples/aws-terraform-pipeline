@@ -92,34 +92,15 @@ module "pipeline" {
 }
 ```
 
-See [Optional Inputs](./docs/optional_inputs.md) for descriptions. 
+See [optional inputs](./docs/optional_inputs.md) for descriptions. 
 
-## Setup a cross-account pipeline
-The pipeline can assume a cross-account role and deploy to another AWS account.
+## Docs
 
-1. Ensure there is a [cross-account IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) that can be assumed by the codebuild roles (validate and execute). 
-2. Edit the provider in "your repo" to include the [assume role argument](https://developer.hashicorp.com/terraform/tutorials/aws/aws-assumerole).
-
-```hcl
-provider "aws" {
-  region = "eu-west-2"
-  assume_role {
-    role_arn     = "arn:aws:iam::112233445566:role/cross-account-role"
-    session_name = "pipeline"
-  }
-}
-```
-3. Commit the changes and run the pipeline.
-
-## Troubleshooting
-
-| Issue | Fix |
-|---|---|
-| Failed lint or validate | Read the report or logs to discover why the code has failed, then make a new commit. |
-| Failed fmt | This means your code is not formatted. Run `terraform fmt --recursive` on your code, then make a new commit. |
-| Failed SAST | Read the Checkov logs (click CodeBuild Project > Reports tab) and either make the correction in code or add a skip to the module inputs. |
-| Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit. |
-| Pipeline fails on apply with `the action failed because no branch named main was found ...` | Either nothing has been committed to the repo or the branch is incorrect (Eg using `Master` not `Main`). Either commit to the Main branch or change the module input to fix this. |
+- [Optional inputs](./docs/optional_inputs.md)
+- [Architecture](./docs/architecture.md)
+- [Setup a cross account pipeline](./docs/cross_account_pipeline.md)
+- [Troubleshooting](./docs/troubleshooting.md)
+- [Best practices](./docs/best_practices.md)
 
 ## Related Resources
 
