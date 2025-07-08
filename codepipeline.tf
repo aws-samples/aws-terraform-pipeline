@@ -20,7 +20,7 @@ resource "aws_codepipeline" "this" {
         source_action_name = "Source"
         push {
           branches {
-            includes = [var.trigger["push_branches"]]
+            includes = var.trigger["push_branches"]
           }
         }
         pull_request {
@@ -29,7 +29,7 @@ resource "aws_codepipeline" "this" {
             "UPDATED"
           ]
           branches {
-            includes = [var.trigger["pr_branches"]]
+            includes = var.trigger["pr_branches"]
           }
         }
       }
