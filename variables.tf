@@ -65,20 +65,16 @@ variable "detect_changes" {
   default     = false
 }
 
+variable "kms_key" {
+  description = "AWS KMS key ARN"
+  type        = string
+  default     = null
+}
+
 variable "log_retention" {
   description = "CloudWatch log group retention, in days"
   type        = number
   default     = 90
-}
-
-variable "notifications" {
-  description = "SNS notification configuration"
-  type = object({
-    sns_topic   = string
-    events      = list(string)
-    detail_type = string
-  })
-  default = null
 }
 
 variable "mode" {
@@ -95,10 +91,14 @@ variable "mode" {
   }
 }
 
-variable "kms_key" {
-  description = "AWS KMS key ARN"
-  type        = string
-  default     = null
+variable "notifications" {
+  description = "SNS notification configuration"
+  type = object({
+    sns_topic   = string
+    events      = list(string)
+    detail_type = string
+  })
+  default = null
 }
 
 variable "tags" {
@@ -120,6 +120,14 @@ variable "terraform_version" {
 variable "tflint_version" {
   type    = string
   default = "0.55.0"
+}
+
+variable "trigger" {
+  type = object({
+    push_branches = list(string)
+    pr_branches   = list(string)
+  })
+  default = null
 }
 
 variable "vpc" {

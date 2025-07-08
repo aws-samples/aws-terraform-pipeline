@@ -12,22 +12,25 @@ resource "aws_codepipeline" "this" {
     type     = "S3"
   }
 
-  trigger {
-    provider_type = "CodeStarSourceConnection"
-    git_configuration {
-      source_action_name = "Source"
-      push {
-        branches {
-          includes = ["*"]
+  dynamic "trigger" {
+    for_each = var.trigger == null ? [] : [var.trigger]
+    content {
+      provider_type = "CodeStarSourceConnection"
+      git_configuration {
+        source_action_name = "Source"
+        push {
+          branches {
+            includes = [var.trigger["push_branches"]]
+          }
         }
-      }
-      pull_request {
-        events = [
-          "OPEN",
-          "UPDATED"
-        ]
-        branches {
-          includes = ["*"]
+        pull_request {
+          events = [
+            "OPEN",
+            "UPDATED"
+          ]
+          branches {
+            includes = [var.trigger["pr_branches"]]
+          }
         }
       }
     }
