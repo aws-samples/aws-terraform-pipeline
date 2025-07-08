@@ -22,6 +22,10 @@ resource "aws_codepipeline" "this" {
         }
       }
       pull_request {
+        events = [
+          "OPEN",
+          "UPDATED"
+        ]
         branches {
           includes = "*"
         }
