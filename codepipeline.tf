@@ -12,6 +12,23 @@ resource "aws_codepipeline" "this" {
     type     = "S3"
   }
 
+  trigger {
+    provider_type = CodeStarSourceConnection
+    git_configuration {
+      source_action_name = "Source"
+      push {
+        branches {
+          includes = "*"
+        }
+      }
+      pull_request {
+        branches {
+          includes = "*"
+        }
+      }
+    }
+  }
+
   stage {
     name = "Source"
     action {
