@@ -76,6 +76,7 @@ resource "aws_codepipeline" "this" {
 
       configuration = {
         CustomData = "This action will approve the deployment of resources in ${var.pipeline_name}. Please review the plan action before approving."
+
       }
     }
   }
@@ -170,5 +171,17 @@ data "aws_iam_policy_document" "codepipeline" {
     resources = [
       var.connection == null ? "arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${var.repo}" : var.connection
     ]
+  }
+}
+
+resource "aws_codestarnotifications_notification_rule" "this" {
+  count          = var.notifications != null ? 1 : 0
+  name           = var.pipeline_name
+  detail_type    = var.notifications["detail_type"]
+  event_type_ids = var.notifications["events"]
+  resource       = aws_codepipeline.this.arn
+
+  target {
+    address = var.notifications["sns_topic"]
   }
 }

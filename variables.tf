@@ -71,6 +71,16 @@ variable "log_retention" {
   default     = 90
 }
 
+variable "notifications" {
+  description = "SNS notification configuration"
+  type = object({
+    sns_topic   = string
+    events      = list(string)
+    detail_type = string
+  })
+  default = null
+}
+
 variable "mode" {
   description = "pipeline execution mode"
   type        = string

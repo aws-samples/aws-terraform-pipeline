@@ -26,6 +26,8 @@
 
 `vpc` configures the CodeBuild projects to [run in a VPC](https://docs.aws.amazon.com/codebuild/latest/userguide/vpc-support.html).  
 
+`notifications` creates a [CodeStar notification](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome.html) for the pipeline. `sns_topic` is the SNS topic arn. `events` are the [notification events](https://docs.aws.amazon.com/dtconsole/latest/userguide/concepts.html#events-ref-pipeline). `detail_type` is either BASIC or FULL. The SNS topic must allow [codestar-notifications.amazonaws.com to publush to the topic](https://docs.aws.amazon.com/dtconsole/latest/userguide/notification-target-create.html). 
+
 `tags` enables tag validation with [tag-nag](https://github.com/jakebark/tag-nag). Input a list of tag keys and/or tag keys and values to enforce. Input must be passed as a string, see [commands](https://github.com/jakebark/tag-nag?tab=readme-ov-file#commands). 
 
 `tagnag_version` controls the [tag-nag](https://github.com/jakebark/tag-nag) version. It defaults to 0.5.8.
