@@ -18,7 +18,7 @@ resource "aws_codepipeline" "this" {
       source_action_name = "Source"
       push {
         branches {
-          includes = "*"
+          includes = ["*"]
         }
       }
       pull_request {
@@ -27,7 +27,7 @@ resource "aws_codepipeline" "this" {
           "UPDATED"
         ]
         branches {
-          includes = "*"
+          includes = ["*"]
         }
       }
     }
