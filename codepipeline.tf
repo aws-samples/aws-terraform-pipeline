@@ -175,7 +175,7 @@ data "aws_iam_policy_document" "codepipeline" {
 }
 
 resource "aws_codestarnotifications_notification_rule" "this" {
-  count          = var.notifications["sns_topic"] != null ? 1 : 0
+  count          = var.notifications != null ? 1 : 0
   name           = var.pipeline_name
   detail_type    = var.notifications["detail_type"]
   event_type_ids = var.notifications["events"]

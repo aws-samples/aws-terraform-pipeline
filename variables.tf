@@ -78,14 +78,7 @@ variable "notifications" {
     events      = list(string)
     detail_type = string
   })
-  default = {
-    sns_topic = null
-    events = [
-      "codepipeline-pipeline-pipeline-execution-failed",
-      "codepipeline-pipeline-pipeline-execution-succeeded"
-    ]
-    detail_type = "BASIC"
-  }
+  default = null
 }
 
 variable "mode" {
