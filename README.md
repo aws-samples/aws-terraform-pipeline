@@ -1,6 +1,6 @@
 # terraform-aws-pipeline
  
-Deploy terraform with terraform. 
+Deploy Terraform with Terraform. 
 
 🐓 🥚 ?
 
@@ -26,7 +26,7 @@ pipeline repo
    main.tf <--module deployed here
 ```
 
-Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. This could be an infrastructure or bootstrap repo for the AWS account.
+Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. 
 
 ## Module Inputs
 
@@ -91,95 +91,16 @@ module "pipeline" {
   ]
 }
 ```
-`branch` is the branch to source. It defaults to `main`.
 
-`mode` is [pipeline execution mode](https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts-how-it-works.html#concepts-how-it-works-executions). It defaults to `SUPERSEDED`.
+See [optional inputs](./docs/optional_inputs.md) for descriptions. 
 
-`detect_changes` is used with third-party services, like GitHub. It enables AWS CodeConnections to invoke the pipeline when there is a commit to the repo. It defaults to `false`.
+## Docs
 
-`kms_key` is the arn of an *existing* AWS KMS key. This input will encrypt the Amazon S3 bucket with a AWS KMS key of your choice. Otherwise the bucket will be encrypted using SSE-S3. Your AWS KMS key policy will need to allow codebuild and codepipeline to `kms:GenerateDataKey*` and `kms:Decrypt`.
-
-`access_logging_bucket` S3 server access logs bucket ARN, enables server access logging on the S3 artifact bucket.
-
-`artifact_retention` controls the S3 artifact bucket retention period. It defaults to 90 (days). 
-
-`log_retention` controls the CloudWatch log group retention period. It defaults to 90 (days). 
-
-`codebuild_policy` replaces the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy. This can be used if you want to scope the permissions of the pipeline. 
-
-`build_timeout` is the CodeBuild project build timeout. It defaults to 10 (minutes). 
-
-`terraform_version` controls the terraform version. It defaults to 1.5.7.
-
-`checkov_version` controls the [Checkov](https://www.checkov.io/) version. It defaults to latest.
-
-`tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.48.0.
-
-`vpc` configures the CodeBuild projects to [run in a VPC](https://docs.aws.amazon.com/codebuild/latest/userguide/vpc-support.html).  
-
-`tags` enables tag validation with [tag-nag](https://github.com/jakebark/tag-nag). Input a list of tag keys and/or tag keys and values to enforce. Input must be passed as a string, see [commands](https://github.com/jakebark/tag-nag?tab=readme-ov-file#commands). 
-
-`tagnag_version` controls the [tag-nag](https://github.com/jakebark/tag-nag) version. It defaults to 0.5.8.
-
-`checkov_skip` defines [Checkov](https://www.checkov.io/) skips for the pipeline. This is useful for organization-wide policies, removing the need to add individual resource skips. 
-
-
-## Architecture
-
-![image info](./img/architecture.png)
-
-1. User commits to existing repository. 
-2. The commit invokes an Amazon EventBridge rule, which runs the AWS CodePipeline pipeline.
-3. The pipeline validates the code, then runs a `terraform plan`, before waiting for manual approval. Once this is issued, the resources are built with a `terraform apply` (either within the same account or another AWS account, depending on how your code is configured).  
-4. Pipeline artifacts are sent to an Amazon S3 bucket. Pipeline activity is logged in Amazon CloudWatch logs. 
-
-#### Pipeline Validation
-
-| Check | Description |
-|---|---|
-| validate | runs `terraform validate` to make sure that the code is syntactically valid. |
-| lint | runs [tfLint](https://github.com/terraform-linters/tflint) which will find errors, depreciated syntax, and check naming conventions. |
-| fmt | runs `terraform fmt --recursive --check` to ensure code is consistently formatted. |
-| sast | runs [checkov](https://www.checkov.io/) for security best practices. |
-| tags (optional)| runs [tag-nag](https://github.com/jakebark/tag-nag) to validate tags.|
-
-## Setup a cross-account pipeline
-The pipeline can assume a cross-account role and deploy to another AWS account.
-
-1. Ensure there is a [cross-account IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html) that can be assumed by the codebuild roles (validate and execute). 
-2. Edit the provider in "your repo" to include the [assume role argument](https://developer.hashicorp.com/terraform/tutorials/aws/aws-assumerole).
-
-```hcl
-provider "aws" {
-  region = "eu-west-2"
-  assume_role {
-    role_arn     = "arn:aws:iam::112233445566:role/cross-account-role"
-    session_name = "pipeline"
-  }
-}
-```
-3. Commit the changes and run the pipeline.
-
-## Troubleshooting
-
-| Issue | Fix |
-|---|---|
-| Failed lint or validate | Read the report or logs to discover why the code has failed, then make a new commit. |
-| Failed fmt | This means your code is not formatted. Run `terraform fmt --recursive` on your code, then make a new commit. |
-| Failed SAST | Read the Checkov logs (click CodeBuild Project > Reports tab) and either make the correction in code or add a skip to the module inputs. |
-| Failed plan or apply stage | Read the report or logs to discover error in terraform code, then make a new commit. |
-| Pipeline fails on apply with `the action failed because no branch named main was found ...` | Either nothing has been committed to the repo or the branch is incorrect (Eg using `Master` not `Main`). Either commit to the Main branch or change the module input to fix this. |
-
-## Best Practices
-
-The CodeBuild execution role uses the [AWSAdministratorAccess](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AdministratorAccess.html) IAM policy  as this pattern is designed for a wide audience to deploy any resource to an AWS account. It assumes there are strong organizational controls in place and good segregation practices at the AWS account level. If you need to better scope the policy, the `codebuild_policy` optional input can be used to replace this with an IAM policy of your choosing. 
-
-Permissions to your CodeCommit repository, CodeBuild projects, and CodePipeline pipeline should be tightly controlled. Here are some ideas:
-- [Specify approval permission for specific pipelines and approval actions](https://docs.aws.amazon.com/codepipeline/latest/userguide/approvals-iam-permissions.html#approvals-iam-permissions-limited).
-- [Using identity-based policies for AWS CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/auth-and-access-control-iam-identity-based-access-control.html). 
-- [Limit pushes and merges to branches in AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-conditional-branch.html)
-
-Checkov skips can be used where Checkov policies conflict with your organization's practices or design decisions. The `checkov_skip` module input allows you to set skips for all resources in your repository. For example, if your organization operates in a single region you may want to add `CKV_AWS_144` (Ensure that S3 bucket has cross-region replication enabled). For individual resource skips, you can still use [inline code comments](https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html).
+- [Optional inputs](./docs/optional_inputs.md)
+- [Architecture](./docs/architecture.md)
+- [Setup a cross account pipeline](./docs/cross_account_pipeline.md)
+- [Troubleshooting](./docs/troubleshooting.md)
+- [Best practices](./docs/best_practices.md)
 
 ## Related Resources
 
