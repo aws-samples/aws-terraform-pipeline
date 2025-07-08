@@ -13,7 +13,7 @@ resource "aws_codepipeline" "this" {
   }
 
   trigger {
-    provider_type = CodeStarSourceConnection
+    provider_type = "CodeStarSourceConnection"
     git_configuration {
       source_action_name = "Source"
       push {
