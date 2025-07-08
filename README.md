@@ -1,6 +1,6 @@
 # terraform-aws-pipeline
  
-Deploy terraform with terraform. 
+Deploy Terraform with Terraform. 
 
 🐓 🥚 ?
 
@@ -26,7 +26,7 @@ pipeline repo
    main.tf <--module deployed here
 ```
 
-Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. This could be an infrastructure or bootstrap repo for the AWS account.
+Segregation enables the pipeline to run commands against the code in "your repo" without affecting the pipeline infrastructure. 
 
 ## Module Inputs
 
