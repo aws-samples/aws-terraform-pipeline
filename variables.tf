@@ -44,7 +44,6 @@ variable "build_override" {
     apply_buildspec = optional(string)
     apply_image     = optional(string)
   })
-  default = null
 }
 
 variable "checkov_skip" {
