@@ -8,7 +8,7 @@ module "validation" {
   codebuild_role        = aws_iam_role.codebuild_validate.arn
   environment_variables = var.tags == "" ? local.env_var : local.conditional_env_var
   build_timeout         = var.build_timeout
-  build_spec            = "${each.key}.yml"
+  build_spec            = file("${path.module}/modules/codebuild/buildspecs/${each.key}.yml")
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = each.value
   vpc                   = var.vpc
