@@ -22,7 +22,7 @@ module "plan" {
   build_timeout         = var.build_timeout
   build_spec            = var.build_override["plan_buildspec"] != null ? var.build_override["plan_buildspec"] : file("${path.module}/modules/codebuild/buildspecs/plan.yml")
   log_group             = aws_cloudwatch_log_group.this.name
-  image                 = "hashicorp/terraform:${var.terraform_version}"
+  image                 = try(var.build_override["plan_image"], "hashicorp/terraform:${var.terraform_version}")
   vpc                   = var.vpc
 }
 
@@ -34,7 +34,7 @@ module "apply" {
   build_timeout         = var.build_timeout
   build_spec            = var.build_override["apply_buildspec"] != null ? var.build_override["apply_buildspec"] : file("${path.module}/modules/codebuild/buildspecs/apply.yml")
   log_group             = aws_cloudwatch_log_group.this.name
-  image                 = "hashicorp/terraform:${var.terraform_version}"
+  image                 = try(var.build_override["apply_image"], "hashicorp/terraform:${var.terraform_version}")
   vpc                   = var.vpc
 }
 
