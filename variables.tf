@@ -36,6 +36,17 @@ variable "build_timeout" {
   default     = 10
 }
 
+variable "build_override" {
+  description = "Override CodeBuild images and buildspecs"
+  type = object({
+    plan_buildspec  = optional(string)
+    plan_image      = optional(string)
+    apply_buildspec = optional(string)
+    apply_image     = optional(string)
+  })
+  default = null
+}
+
 variable "checkov_skip" {
   description = "list of checkov checks to skip"
   type        = list(string)
