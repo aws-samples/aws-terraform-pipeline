@@ -20,7 +20,7 @@ module "plan" {
   codebuild_role        = aws_iam_role.codebuild_execution.arn
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
-  build_spec            = "plan.yml"
+  build_spec            = var.build_override["plan_buildspec"] != null ? var.build_override["plan_buildspec"] : file("${path.module}/modules/codebuild/buildspecs/plan.yml")
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
   vpc                   = var.vpc
@@ -32,7 +32,7 @@ module "apply" {
   codebuild_role        = aws_iam_role.codebuild_execution.arn
   environment_variables = local.env_var
   build_timeout         = var.build_timeout
-  build_spec            = "apply.yml"
+  build_spec            = var.build_override["apply_buildspec"] != null ? var.build_override["apply_buildspec"] : file("${path.module}/modules/codebuild/buildspecs/apply.yml")
   log_group             = aws_cloudwatch_log_group.this.name
   image                 = "hashicorp/terraform:${var.terraform_version}"
   vpc                   = var.vpc

@@ -33,7 +33,7 @@ resource "aws_codebuild_project" "this" {
 
   source {
     type                = "CODEPIPELINE"
-    buildspec           = file("${path.module}/buildspecs/${var.build_spec}")
+    buildspec           = var.build_spec
     git_clone_depth     = 0
     insecure_ssl        = false
     report_build_status = false
