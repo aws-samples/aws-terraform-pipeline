@@ -36,6 +36,17 @@ variable "build_timeout" {
   default     = 10
 }
 
+variable "build_override" {
+  description = "Override CodeBuild images and buildspecs"
+  type = object({
+    plan_buildspec  = optional(string)
+    plan_image      = optional(string)
+    apply_buildspec = optional(string)
+    apply_image     = optional(string)
+  })
+  default = {}
+}
+
 variable "checkov_skip" {
   description = "list of checkov checks to skip"
   type        = list(string)
@@ -65,20 +76,16 @@ variable "detect_changes" {
   default     = false
 }
 
+variable "kms_key" {
+  description = "AWS KMS key ARN"
+  type        = string
+  default     = null
+}
+
 variable "log_retention" {
   description = "CloudWatch log group retention, in days"
   type        = number
   default     = 90
-}
-
-variable "notifications" {
-  description = "SNS notification configuration"
-  type = object({
-    sns_topic   = string
-    events      = list(string)
-    detail_type = string
-  })
-  default = null
 }
 
 variable "mode" {
@@ -95,10 +102,14 @@ variable "mode" {
   }
 }
 
-variable "kms_key" {
-  description = "AWS KMS key ARN"
-  type        = string
-  default     = null
+variable "notifications" {
+  description = "SNS notification configuration"
+  type = object({
+    sns_topic   = string
+    events      = list(string)
+    detail_type = string
+  })
+  default = null
 }
 
 variable "tags" {

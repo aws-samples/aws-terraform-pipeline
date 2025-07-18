@@ -74,6 +74,13 @@ module "pipeline" {
   checkov_version   = "3.2.0"
   tflint_version    = "0.55.0"
 
+  build_override = {
+    plan_buildspec  = file("./my_plan.yml")
+    plan_image      = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
+    apply_buildspec = file("./my_apply.yml")
+    apply_image     = "hashicorp/terraform:latest"
+  }
+
   vpc = {
     vpc_id             = "vpc-011a22334455bb66c",
     subnets            = ["subnet-011aabbcc2233d4ef"],

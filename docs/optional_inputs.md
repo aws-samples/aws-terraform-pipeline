@@ -24,6 +24,8 @@
 
 `tflint_version` controls the [tflint](https://github.com/terraform-linters/tflint) version. It defaults to 0.48.0.
 
+`build_override` can replace the existing CodeBuild buildspecs and images with your own. 
+
 `vpc` configures the CodeBuild projects to [run in a VPC](https://docs.aws.amazon.com/codebuild/latest/userguide/vpc-support.html).  
 
 `notifications` creates a [CodeStar notification](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome.html) for the pipeline. `sns_topic` is the SNS topic arn. `events` are the [notification events](https://docs.aws.amazon.com/dtconsole/latest/userguide/concepts.html#events-ref-pipeline). `detail_type` is either BASIC or FULL. The SNS topic must allow [codestar-notifications.amazonaws.com to publush to the topic](https://docs.aws.amazon.com/dtconsole/latest/userguide/notification-target-create.html). 
