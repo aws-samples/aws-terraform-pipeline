@@ -56,6 +56,10 @@ variable "checkov_skip" {
 variable "checkov_version" {
   type    = string
   default = "3.2.0"
+  validation {
+    condition     = can(regex("^\\d+\\.\\d+\\.\\d+$", var.checkov_version))
+    error_message = "checkov version must use format x.y.z"
+  }
 }
 
 variable "codebuild_policy" {
@@ -121,16 +125,28 @@ variable "tags" {
 variable "tagnag_version" {
   type    = string
   default = "0.7.9"
+  validation {
+    condition     = can(regex("^\\d+\\.\\d+\\.\\d+$", var.tagnag_version))
+    error_message = "tagnag version must use format x.y.z"
+  }
 }
 
 variable "terraform_version" {
   type    = string
-  default = "1.7.0"
+  default = "1.8.0"
+  validation {
+    condition     = can(regex("^\\d+\\.\\d+\\.\\d+$", var.terraform_version))
+    error_message = "terraform version must use format x.y.z"
+  }
 }
 
 variable "tflint_version" {
   type    = string
   default = "0.55.0"
+  validation {
+    condition     = can(regex("^\\d+\\.\\d+\\.\\d+$", var.tflint_version))
+    error_message = "tflint version must use format x.y.z"
+  }
 }
 
 variable "vpc" {
