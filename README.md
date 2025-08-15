@@ -43,7 +43,7 @@ Third-party service:
 ```hcl
 module "pipeline" {
   source        = "aws-samples/pipeline/aws"
-  version       = "2.2.x"
+  version       = "2.3.x"
   pipeline_name = "pipeline-name"
   repo          = "organization/repo"
   connection    = aws_codestarconnections_connection.this.arn
